@@ -1,4 +1,4 @@
-package com.example.mobilehotels;
+package com.example.bookingmobile;
 
 import android.content.Context;
 
