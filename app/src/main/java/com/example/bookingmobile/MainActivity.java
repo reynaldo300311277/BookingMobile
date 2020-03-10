@@ -61,14 +61,18 @@ public class MainActivity extends AppCompatActivity {
         btnCheckUser = findViewById(R.id.btnCheckUser);
         btnCheckUser.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-
-                if (dbHelper.checkUser("User1", "pass1"))
+            public void onClick(View v)
+            {
+ /*               if (dbHelper.checkUser("User1", "pass1"))
                     Toast.makeText(MainActivity.this, "User and Password OK!!",
                             Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(MainActivity.this, "User and Password NOT OK!!",
-                            Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_SHORT).show();*/
+
+
+                Toast.makeText(MainActivity.this, "Total => " + dbHelper.verifyQuery(),
+                        Toast.LENGTH_SHORT).show();
             }
         });
 

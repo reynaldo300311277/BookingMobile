@@ -2,6 +2,7 @@ package com.example.bookingmobile;
 
 public class CRoom {
 
+    private int pkRoom;
     private int fkHotel;
     private float price;
     private String type;
@@ -12,8 +13,15 @@ public class CRoom {
     private String statusBegin;
     private String statusEnd;
 
-    public CRoom(int fkHotel, float price, String type, String description, int maxNumAdults,
-                 int maxNumchildren, String status) {
+    public CRoom(int pkRoom)
+    {
+        this.pkRoom = pkRoom;
+    }
+
+    public CRoom(int pkRoom, int fkHotel, float price, String type, String description,
+                 int maxNumAdults, int maxNumchildren, String status)
+    {
+        this.pkRoom = pkRoom;
         this.fkHotel = fkHotel;
         this.price = price;
         this.type = type;
@@ -23,6 +31,14 @@ public class CRoom {
         this.status = status;
         this.statusBegin = null;
         this.statusEnd = null;
+    }
+
+    public int getPkRoom() {
+        return pkRoom;
+    }
+
+    public void setPkRoom(int pkRoom) {
+        this.pkRoom = pkRoom;
     }
 
     public int getFkHotel() {

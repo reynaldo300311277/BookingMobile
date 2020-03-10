@@ -10,7 +10,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CSQLiteHelper extends SQLiteOpenHelper {
@@ -136,11 +138,10 @@ public class CSQLiteHelper extends SQLiteOpenHelper {
     //      true => User and Password Ok.
     //      fase => User and Password NOT Ok.
     public boolean checkUser(String user, String password) {
-        SQLiteDatabase db = this.getWritableDatabase();
+ /*       SQLiteDatabase db = this.getWritableDatabase();
         Cursor c;
 
         try {
-
             String query = "SELECT * FROM User " +
                     "WHERE loginName = '" + user + "' AND hashPassword = '" + password + "';";
             c = db.rawQuery(query,null);
@@ -154,6 +155,26 @@ public class CSQLiteHelper extends SQLiteOpenHelper {
         }
 
         db.close();
+        return true;*/
+
+        //CHotelsFromCity hotelsFromCity = new CHotelsFromCity(this.getWritableDatabase());
+        //return hotelsFromCity.checkUser("rhardson1", "73872041");
+        return true;
+    }
+
+    public boolean verifyQuery() {
+        try
+        {
+            CHotelsFromCity hotelsFromCity = new CHotelsFromCity(this.getWritableDatabase(),
+                    "Edmonton", "2019-06-07", "2019-06-10",
+                    1, 4, 4);
+
+            ArrayList<CHotel> arrayHotels = hotelsFromCity.getHotelsFromCity();
+        }
+        catch (Exception e)
+        {
+        }
+
         return true;
     }
 
