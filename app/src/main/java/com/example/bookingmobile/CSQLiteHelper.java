@@ -85,97 +85,19 @@ public class CSQLiteHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void openDatabase() {
-        String path = DB_PATH + DB_NAME;
-        mDatabase = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READWRITE);
-    }
-
-    public void createDatabase() {
-        if (!checkDatabase()) {
+    public void createDatabaseConnection()  {
+        if (!checkDatabase())
+        {
             this.getReadableDatabase();
 
-            try {
+            try
+            {
                 copyDatabase();
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 e.printStackTrace();
             }
         }
     }
-
-    // return all users
-    public List<CUser> getAllUsers() {
-        List<CUser> temp = new ArrayList<CUser>();
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor c;
-
-        try {
-            c = db.rawQuery("SELECT * FROM User", null);
-
-            if (c == null)
-                return null;
-
-            c.moveToFirst();
-
-            do {
-                CUser cuser = new CUser(c.getString(c.getColumnIndex("loginName")),
-                        c.getString(c.getColumnIndex("hashPassword")),
-                        c.getString(c.getColumnIndex("email")));
-
-                temp.add(cuser);
-            } while (c.moveToNext());
-
-            c.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        db.close();
-        return temp;
-    }
-
-    // Authentication Check
-    //      true => User and Password Ok.
-    //      fase => User and Password NOT Ok.
-    public boolean checkUser(String user, String password) {
- /*       SQLiteDatabase db = this.getWritableDatabase();
-        Cursor c;
-
-        try {
-            String query = "SELECT * FROM User " +
-                    "WHERE loginName = '" + user + "' AND hashPassword = '" + password + "';";
-            c = db.rawQuery(query,null);
-
-            if (c.getCount() == 0) {
-                db.close();
-                return false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        db.close();
-        return true;*/
-
-        //CHotelsFromCity hotelsFromCity = new CHotelsFromCity(this.getWritableDatabase());
-        //return hotelsFromCity.checkUser("rhardson1", "73872041");
-        return true;
-    }
-
-    public boolean verifyQuery() {
-        try
-        {
-            CHotelsFromCity hotelsFromCity = new CHotelsFromCity(this.getWritableDatabase(),
-                    "Edmonton", "2019-06-07", "2019-06-10",
-                    1, 4, 4);
-
-            ArrayList<CHotel> arrayHotels = hotelsFromCity.getHotelsFromCity();
-        }
-        catch (Exception e)
-        {
-        }
-
-        return true;
-    }
-
 }
