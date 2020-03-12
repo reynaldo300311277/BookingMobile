@@ -1,7 +1,9 @@
 package com.example.bookingmobile;
 
-public class CRoom {
+import java.util.ArrayList;
 
+public class CRoom
+{
     private int pkRoom;
     private int fkHotel;
     private float price;
@@ -13,14 +15,24 @@ public class CRoom {
     private String statusBegin;
     private String statusEnd;
 
-    public CRoom(int pkRoom)
-    {
+    private ArrayList<String> arrayFacilitiesRoom = new ArrayList<>();
+    private ArrayList<CPhotos> arrayPhotos = new ArrayList<>();
+
+    public CRoom(int pkRoom, int fkHotel)  {
         this.pkRoom = pkRoom;
+        this.fkHotel = fkHotel;
+        this.price = -1;
+        this.type = "";
+        this.description = "";
+        this.maxNumAdults = 4;
+        this.maxNumchildren = 4;
+        this.status = "";
+        this.statusBegin = null;
+        this.statusEnd = null;
     }
 
     public CRoom(int pkRoom, int fkHotel, float price, String type, String description,
-                 int maxNumAdults, int maxNumchildren, String status)
-    {
+                 int maxNumAdults, int maxNumchildren, String status) {
         this.pkRoom = pkRoom;
         this.fkHotel = fkHotel;
         this.price = price;
@@ -111,5 +123,21 @@ public class CRoom {
 
     public void setStatusEnd(String statusEnd) {
         this.statusEnd = statusEnd;
+    }
+
+    public ArrayList<String> getFacilitiesRoom() {
+        return arrayFacilitiesRoom;
+    }
+
+    public void setFacilitiesRoom(ArrayList<String> arrayFacilitiesRoom) {
+        this.arrayFacilitiesRoom = arrayFacilitiesRoom;
+    }
+
+    public ArrayList<CPhotos> getSightseeing() {
+        return arrayPhotos;
+    }
+
+    public void setPhotos(ArrayList<CPhotos> arrayPhotos) {
+        this.arrayPhotos = arrayPhotos;
     }
 }

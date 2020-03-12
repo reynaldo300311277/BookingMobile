@@ -2,8 +2,8 @@ package com.example.bookingmobile;
 
 import java.util.ArrayList;
 
-public class CHotel {
-
+public class CHotel
+{
     private int pkHotel;
     private String name;
     private String city;
@@ -12,10 +12,11 @@ public class CHotel {
     private float latitude;
     private float longitude;
 
+    private ArrayList<String> arrayFacilitiesHotel = new ArrayList<>();
     private ArrayList<CRoom> arrayRooms = new ArrayList<>();
+    private ArrayList<CSightseeing> arraySightseeing = new ArrayList<>();
 
-    public CHotel(int pkHotel)
-    {
+    public CHotel(int pkHotel) {
         this.pkHotel = pkHotel;
         this.name = "";
         this.city = "";
@@ -26,8 +27,7 @@ public class CHotel {
     }
 
     public CHotel(int pkHotel, String name, String city, String province, String description,
-                  float latitude, float longitude)
-    {
+                  float latitude, float longitude) {
         this.pkHotel = pkHotel;
         this.name = name;
         this.city = city;
@@ -95,11 +95,26 @@ public class CHotel {
 
     public void addRoom(CRoom room) { this.arrayRooms.add(room);  }
 
-    public CHotel getHotel(int pkHotel)
-    {
+    public CHotel getHotel(int pkHotel) {
         if (this.pkHotel == pkHotel)
             return this;
         else
             return null;
+    }
+
+    public ArrayList<String> getFacilitiesHotel() {
+        return arrayFacilitiesHotel;
+    }
+
+    public void setFacilitiesHotel(ArrayList<String> arrayFacilitiesHotel) {
+        this.arrayFacilitiesHotel = arrayFacilitiesHotel;
+    }
+
+    public ArrayList<CSightseeing> getSightseeing() {
+        return arraySightseeing;
+    }
+
+    public void setSightseeing(ArrayList<CSightseeing> arrayFacilitiesHotel) {
+        this.arraySightseeing = arrayFacilitiesHotel;
     }
 }

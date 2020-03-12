@@ -3,15 +3,12 @@ package com.example.bookingmobile;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class CHotelsFromCity
 {
     private SQLiteDatabase mDatabase;
     private CHotel hotel;
-    private CHotelFacility[] hotelFacilities;
     private CSightseeing[] hotelSightseeing;
     private CRoom[] roomsHotel;
 
@@ -22,55 +19,64 @@ public class CHotelsFromCity
     private int numAdults;
     private int numChildren;
 
-    private Boolean[] filters = new Boolean[8];
+    private String filters = "";
 
-    public CHotelsFromCity(SQLiteDatabase mDatabase)
-    {
+    public CHotelsFromCity(SQLiteDatabase mDatabase) {
         this.mDatabase = mDatabase;
+
+        this.city = "";
+        this.dateCheckIn = "2000-01-01";
+        this.dateCheckOut = "2000-01-02";
+        this.numRooms = 1;
+        this.numAdults = 3;
+        this.numChildren = 3;
     }
 
-    public CHotelsFromCity(SQLiteDatabase mDatabase, String city, String dateCheckIn, String dateCheckOut,
-                           int numRooms, int numAdults, int numChildren)
-    {
-        this.mDatabase = mDatabase;
-        this.city = city;
+    public String setFiltersHotels (boolean hasParking, boolean hasDoubleBed, boolean hasFreeWifi,
+                           boolean isSmokingFree, boolean isPetFriendly, boolean hasGym,
+                           boolean hasSwimmingPool, boolean hasSauna) {
+        ArrayList<Integer> listFilters = new ArrayList<>();
 
+        if (hasParking)
+            listFilters.add(1);
+        if (hasDoubleBed)
+            listFilters.add(2);
+        if (hasFreeWifi)
+            listFilters.add(3);
+        if (isSmokingFree)
+            listFilters.add(4);
+        if (isPetFriendly)
+            listFilters.add(5);
+        if (hasGym)
+            listFilters.add(6);
+        if (hasSwimmingPool)
+            listFilters.add(7);
+        if (hasSauna)
+            listFilters.add(8);
+
+        if (listFilters.size() > 0)
+            for (int i=0; i< listFilters.size(); i++)
+            {
+                if (i != listFilters.size() - 1)
+                    filters += listFilters.get(i).toString() + ", ";
+                else
+                    filters += listFilters.get(i).toString() + "";
+            }
+
+        return filters;
+    }
+
+    //public ArrayList<CHotel> getHotelsFromCity()
+    public ArrayList<CHotel> getHotelsFromCity(String city, String dateCheckIn, String dateCheckOut,
+                                               int numRooms, int numAdults, int numChildren) {
+        ArrayList<CHotel> arrayHotels = new ArrayList<>();
+
+        this.city = city;
         this.dateCheckIn = dateCheckIn;
         this.dateCheckOut = dateCheckOut;
         this.numRooms = numRooms;
         this.numAdults = numAdults;
         this.numChildren = numChildren;
-
-        filters[0] = true;
-        filters[1] = true;
-        filters[2] = true;
-        filters[3] = true;
-        filters[4] = true;
-        filters[5] = true;
-        filters[6] = true;
-        filters[7] = true;
-    }
-
-    // [0] Parking          [1] Double Bed  [2] Free WiFi       [3] Smoking Free
-    // [4] Pet Friendly     [5] Gym         [6] Swimming Pool   [7] Sauna
-    public void setFilters(boolean hasParking, boolean hasDoubleBed, boolean hasFreeWifi,
-                           boolean isSmokingFree, boolean isPetFriendly, boolean hasGym,
-                           boolean hasSwimmingPool, boolean hasSauna)
-    {
-        filters[0] = hasParking;
-        filters[1] = hasDoubleBed;
-        filters[2] = hasFreeWifi;
-        filters[3] = isSmokingFree;
-        filters[4] = isPetFriendly;
-        filters[5] = hasGym;
-        filters[6] = hasSwimmingPool;
-        filters[7] = hasSauna;
-    }
-
-    //public ArrayList<CHotel> getHotelsFromCity()
-    public ArrayList<CHotel> getHotelsFromCity()
-    {
-        ArrayList<CHotel> arrayHotels = new ArrayList<>();
 
         try
         {
@@ -92,10 +98,9 @@ public class CHotelsFromCity
                         "b.dateCheckIn NOT BETWEEN '" + this.dateCheckIn + "' AND '" + this.dateCheckOut + "' AND " +
                         "b.dateCheckOut NOT BETWEEN '" + this.dateCheckIn + "' AND '" + this.dateCheckOut + "' AND " +
                         this.dateCheckIn + " NOT BETWEEN b.dateCheckIn AND b.dateCheckOut AND " +
-                        this.dateCheckOut + " NOT BETWEEN b.dateCheckIn AND b.dateCheckOut " +
+                        this.dateCheckOut + " NOT BETWEEN b.dateCheckIn AND b.dateCheckOut AND " +
+                        "hhf.fkHotelFacility  IN (" + this.filters + ") " +
                     "ORDER BY pkHotel, pkRoom";
-
-            // need including the FILTERS!!!!!
 
             cursor = mDatabase.rawQuery(query,null);
 
@@ -145,9 +150,58 @@ public class CHotelsFromCity
                     cHotel.setLatitude(cursorHotel.getFloat(cursorHotel.getColumnIndex("latitude")));
                     cHotel.setLongitude(cursorHotel.getFloat(cursorHotel.getColumnIndex("longitude")));
 
+                    // search and store the facilities for each hotel
+                    String queryFacilitiesHotel = "SELECT DISTINCT pkHotel, pkHotelFacility, facility " +
+                            "FROM Hotel AS h " +
+                                "INNER JOIN Hotel_HotelFacility AS hhf ON h.pkHotel = hhf.fkHotel " +
+                                "INNER JOIN HotelFacility AS hf ON hhf.fkHotelFacility = hf.pkHotelFacility " +
+                            "WHERE h.pkHotel = '" + listIndexes.get(i)[0] + "' " +
+                            "ORDER BY hf.pkHotelFacility;";
+
+                    Cursor cursorFacilitiesHotel = mDatabase.rawQuery(queryFacilitiesHotel,null);
+                    cursorFacilitiesHotel.moveToFirst();
+
+                    ArrayList<String> hotelFacilities = new ArrayList<>();
+
+                    do
+                    {
+                        hotelFacilities.add(cursorFacilitiesHotel.getString(
+                                cursorFacilitiesHotel.getColumnIndex("facility")));
+                    }
+                    while (cursorFacilitiesHotel.moveToNext());
+
+                    cHotel.setFacilitiesHotel(hotelFacilities);
+
+                    // search and store the sightseeing for each hotel
+                    String querySightseeing = "SELECT pkSightseeing, fkHotel, name, distance " +
+                            "FROM Sightseeing " +
+                            "WHERE fkHotel = '" + listIndexes.get(i)[0] + "' " +
+                            "ORDER BY distance;";
+
+                    Cursor cursorSightseeing = mDatabase.rawQuery(querySightseeing,null);
+                    cursorSightseeing.moveToFirst();
+
+                    ArrayList<CSightseeing> sightseeing = new ArrayList<>();
+
+                    do
+                    {
+                        sightseeing.add(new CSightseeing(
+                                cursorSightseeing.getInt(cursorSightseeing.getColumnIndex("pkSightseeing")),
+                                listIndexes.get(i)[0],
+                                cursorSightseeing.getString(cursorSightseeing.getColumnIndex("name")),
+                                cursorSightseeing.getFloat(cursorSightseeing.getColumnIndex("distance"))
+                        ));
+                    }
+                    while (cursorSightseeing.moveToNext());
+
+                    cHotel.setSightseeing(sightseeing);
+
                     arrayHotels.add(cHotel);
-                    cursorHotel.close();
                     idxReference = listIndexes.get(i)[0];
+
+                    cursorHotel.close();
+                    cursorFacilitiesHotel.close();
+                    cursorSightseeing.close();
                 }
                 else
                 {
@@ -158,7 +212,7 @@ public class CHotelsFromCity
             // build the CRoom Objects and assign to its CHotel
             for (int i=0; i< listIndexes.size(); i++)
             {
-                CRoom cRoom = new CRoom(listIndexes.get(i)[1]);
+                CRoom cRoom = new CRoom(listIndexes.get(i)[1], listIndexes.get(i)[0]);
 
                 String queryRoom = "SELECT price, type, description, maxNumAdults, " +
                         "maxNumChildren " +
@@ -179,7 +233,57 @@ public class CHotelsFromCity
 
                 for (int j=0; j<arrayHotels.size(); j++)
                     if (arrayHotels.get(j).getHotel(listIndexes.get(i)[0]) != null)
+                    {
+                        // search and store the facilities for each room
+                        String queryFacilitiesRoom = "SELECT DISTINCT pkRoom, pkRoomFacility, facility " +
+                                "FROM Room AS r " +
+                                    "INNER JOIN Room_RoomFacility AS rrf ON r.pkRoom = rrf.fkRoom " +
+                                    "INNER JOIN RoomFacility AS rf ON rrf.fkRoomFacility = rf.pkRoomFacility " +
+                                "WHERE pkRoom = '" + listIndexes.get(i)[1] + "' " +
+                                "ORDER BY pkRoomFacility;";
+
+                        Cursor cursorFacilitiesRoom = mDatabase.rawQuery(queryFacilitiesRoom,null);
+                        cursorFacilitiesRoom.moveToFirst();
+
+                        ArrayList<String> roomFacilities = new ArrayList<>();
+
+                        do
+                        {
+                            roomFacilities.add(cursorFacilitiesRoom.getString(
+                                    cursorFacilitiesRoom.getColumnIndex("facility")));
+                        }
+                        while (cursorFacilitiesRoom.moveToNext());
+
+                        cRoom.setFacilitiesRoom(roomFacilities);
+
+                        // search and store the photos for each room
+                        String queryPhotos = "SELECT pkPhotos, fkRoom, idxImage " +
+                                "FROM Photos " +
+                                "WHERE fkRoom = '" + listIndexes.get(i)[1] + "' " +
+                                "ORDER BY idxImage;";
+
+                        Cursor cursorPhotos = mDatabase.rawQuery(queryPhotos,null);
+                        cursorPhotos.moveToFirst();
+
+                        ArrayList<CPhotos> photos = new ArrayList<>();
+
+                        do
+                        {
+                            photos.add(new CPhotos(
+                                    cursorPhotos.getInt(cursorPhotos.getColumnIndex("pkPhotos")),
+                                    listIndexes.get(i)[1],
+                                    cursorPhotos.getInt(cursorPhotos.getColumnIndex("idxImage"))
+                            ));
+                        }
+                        while (cursorPhotos.moveToNext());
+
+                        cRoom.setPhotos(photos);
+
                         arrayHotels.get(j).getHotel(listIndexes.get(i)[0]).addRoom(cRoom);
+
+                        cursorFacilitiesRoom.close();
+                        cursorPhotos.close();
+                    }
 
                 cursorRoom.close();
             }
@@ -189,27 +293,5 @@ public class CHotelsFromCity
         }
 
         return arrayHotels;
-    }
-
-    public int checkUser(String user, String password) {
-        Cursor c;
-        int total = 0;
-
-        try {
-            String query = "SELECT * FROM User " +
-                    "WHERE loginName = '" + user + "' AND hashPassword = '" + password + "';";
-            c = mDatabase.rawQuery(query,null);
-
-            if (c.getCount() == 0) {
-                mDatabase.close();
-            }
-
-            total = c.getCount();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        mDatabase.close();
-        return total;
     }
 }

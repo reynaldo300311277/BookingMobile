@@ -1,15 +1,25 @@
 package com.example.bookingmobile;
 
-public class CSightseeing {
-
+public class CSightseeing
+{
+    private int pkSightseeing;
     private int fkHotel;
     private String name;
     private float distance;
 
-    public CSightseeing(int fkHotel, String name, float distance) {
+    public CSightseeing(int pkSightseeing, int fkHotel, String name, float distance) {
+        this.pkSightseeing = pkSightseeing;
         this.fkHotel = fkHotel;
         this.name = name;
         this.distance = distance;
+    }
+
+    public int getPkSightseeing() {
+        return pkSightseeing;
+    }
+
+    public void setPkSightseeing(int pkSightseeing) {
+        this.pkSightseeing = pkSightseeing;
     }
 
     public int getFkHotel() {

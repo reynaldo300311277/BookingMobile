@@ -15,10 +15,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity extends AppCompatActivity
+{
     List<CUser> lstUser = new ArrayList<CUser>();
-    CSQLiteHelper dbHelper;
     Button btnGetData;
     Button btnCheckUser;
     LinearLayout container;
@@ -29,52 +28,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnGetData = findViewById(R.id.btnGetData);
-        container = findViewById(R.id.container);
-
-        dbHelper = new CSQLiteHelper((getApplicationContext()));
-        dbHelper.createDatabase();
-
         btnGetData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lstUser = dbHelper.getAllUsers();
 
-                for (CUser cuser:lstUser) {
-                    LayoutInflater inflater = (LayoutInflater) getBaseContext().
-                            getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                // Create the object and database connection
+                CSQLiteHelper dbHelper = new CSQLiteHelper((getApplicationContext()));
+                dbHelper.createDatabaseConnection();
 
-                    View addView = inflater.inflate(R.layout.row, null);
+                // Create an CHotelsFromCity and set the filters
+                CHotelsFromCity hotelsFromCity = new CHotelsFromCity(dbHelper.getWritableDatabase());
+                String test = hotelsFromCity.setFiltersHotels(true,true,true,
+                        true, true, true,true,true);
 
-                    TextView txtLoginName = addView.findViewById(R.id.txt1);
-                    TextView txtHashPassword = addView.findViewById(R.id.txt2);
-                    TextView txtEmail = addView.findViewById(R.id.txt3);
+                // Get the hotels
+                ArrayList<CHotel> arrayListHotels = hotelsFromCity.getHotelsFromCity("Edmonton","2019-06-07",
+                        "2019-06-10",1,4,4);
 
-                    txtLoginName.setText(cuser.getLoginName());
-                    txtHashPassword.setText(cuser.getHashPassword());
-                    txtEmail.setText(cuser.getEmail());
-
-                    container.addView(addView);
-                }
+                Toast.makeText(MainActivity.this,
+                        "Total Hotels => " + arrayListHotels.size(), Toast.LENGTH_SHORT).show();
             }
         });
-
-        btnCheckUser = findViewById(R.id.btnCheckUser);
-        btnCheckUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
- /*               if (dbHelper.checkUser("User1", "pass1"))
-                    Toast.makeText(MainActivity.this, "User and Password OK!!",
-                            Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(MainActivity.this, "User and Password NOT OK!!",
-                            Toast.LENGTH_SHORT).show();*/
-
-
-                Toast.makeText(MainActivity.this, "Total => " + dbHelper.verifyQuery(),
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 }

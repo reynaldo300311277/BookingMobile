@@ -1,13 +1,23 @@
 package com.example.bookingmobile;
 
-public class CPhotos {
-
+public class CPhotos
+{
+    private int pkPhoto;
     private int fkRoom;
-    private String path;
+    private int idxImage;
 
-    public CPhotos(int fkRoom, String path) {
+    public CPhotos(int pkPhoto, int fkRoom, int idxImage) {
+        this.pkPhoto = pkPhoto;
         this.fkRoom = fkRoom;
-        this.path = path;
+        this.idxImage = idxImage;
+    }
+
+    public int getPkPhoto() {
+        return pkPhoto;
+    }
+
+    public void setPkPhoto(int pkPhoto) {
+        this.pkPhoto = pkPhoto;
     }
 
     public int getFkRoom() {
@@ -18,11 +28,11 @@ public class CPhotos {
         this.fkRoom = fkRoom;
     }
 
-    public String getPath() {
-        return path;
+    public int getIdxImage() {
+        return idxImage;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setIdxImage(int IdxImage) {
+        this.idxImage = IdxImage;
     }
 }
