@@ -2,8 +2,8 @@ package com.example.bookingmobile;
 
 import java.util.ArrayList;
 
-public class CHotel {
-
+public class CHotel
+{
     private int pkHotel;
     private String name;
     private String city;

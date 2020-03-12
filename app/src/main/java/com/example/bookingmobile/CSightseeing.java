@@ -1,7 +1,7 @@
 package com.example.bookingmobile;
 
-public class CSightseeing {
-
+public class CSightseeing
+{
     private int pkSightseeing;
     private int fkHotel;
     private String name;

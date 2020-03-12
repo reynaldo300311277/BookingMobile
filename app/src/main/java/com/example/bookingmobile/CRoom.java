@@ -2,8 +2,8 @@ package com.example.bookingmobile;
 
 import java.util.ArrayList;
 
-public class CRoom {
-
+public class CRoom
+{
     private int pkRoom;
     private int fkHotel;
     private float price;

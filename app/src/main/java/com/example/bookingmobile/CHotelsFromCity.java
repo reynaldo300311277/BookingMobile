@@ -9,7 +9,6 @@ public class CHotelsFromCity
 {
     private SQLiteDatabase mDatabase;
     private CHotel hotel;
-    private CHotelFacility[] hotelFacilities;
     private CSightseeing[] hotelSightseeing;
     private CRoom[] roomsHotel;
 
@@ -66,7 +65,6 @@ public class CHotelsFromCity
 
         return filters;
     }
-
 
     //public ArrayList<CHotel> getHotelsFromCity()
     public ArrayList<CHotel> getHotelsFromCity(String city, String dateCheckIn, String dateCheckOut,

@@ -1,7 +1,7 @@
 package com.example.bookingmobile;
 
-public class CPhotos {
-
+public class CPhotos
+{
     private int pkPhoto;
     private int fkRoom;
     private int idxImage;

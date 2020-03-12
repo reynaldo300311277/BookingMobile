@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class CSQLiteHelper extends SQLiteOpenHelper {
-
+public class CSQLiteHelper extends SQLiteOpenHelper
+{
     private static String DB_PATH = "";
     private static String DB_NAME = "prjMobile.db";
     private SQLiteDatabase mDatabase;
