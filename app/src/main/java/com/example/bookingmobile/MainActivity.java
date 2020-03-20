@@ -17,10 +17,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
 {
-    List<CUser> lstUser = new ArrayList<CUser>();
     Button btnGetData;
-    Button btnCheckUser;
-    LinearLayout container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +42,18 @@ public class MainActivity extends AppCompatActivity
                 ArrayList<CHotel> arrayListHotels = hotelsFromCity.getHotelsFromCity("Edmonton","2019-06-07",
                         "2019-06-10",1,4,4);
 
+                // Create an object with all rooms from the selected hotel
+                CRoomsFromHotel roomsFromHotel = new CRoomsFromHotel(arrayListHotels.get(0));
+
+                // Set the filters for rooms
+                roomsFromHotel.setFiltersRooms(false, false, true,
+                        false, false, false);
+
+                // Get the set of filtered rooms
+                ArrayList<CRoom> filteredRooms = roomsFromHotel.getRooms();
+
                 Toast.makeText(MainActivity.this,
-                        "Total Hotels => " + arrayListHotels.size(), Toast.LENGTH_SHORT).show();
+                        "Output => " + filteredRooms.size(), Toast.LENGTH_SHORT).show();
             }
         });
     }

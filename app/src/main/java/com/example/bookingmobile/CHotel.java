@@ -117,4 +117,8 @@ public class CHotel
     public void setSightseeing(ArrayList<CSightseeing> arrayFacilitiesHotel) {
         this.arraySightseeing = arrayFacilitiesHotel;
     }
+
+    public ArrayList<CRoom> getArrayRooms() {
+        return arrayRooms;
+    }
 }
