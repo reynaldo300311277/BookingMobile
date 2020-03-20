@@ -140,4 +140,12 @@ public class CRoom
     public void setPhotos(ArrayList<CPhotos> arrayPhotos) {
         this.arrayPhotos = arrayPhotos;
     }
+
+    public ArrayList<String> getArrayFacilitiesRoom() {
+        return arrayFacilitiesRoom;
+    }
+
+    public ArrayList<CPhotos> getArrayPhotos() {
+        return arrayPhotos;
+    }
 }
