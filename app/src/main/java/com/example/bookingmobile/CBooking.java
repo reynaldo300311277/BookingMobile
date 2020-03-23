@@ -2,13 +2,15 @@ package com.example.bookingmobile;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CBooking {
-
+public class CBooking implements Parcelable
+{
     private SQLiteDatabase mDatabase;
 
     private int pkBooking;
@@ -48,6 +50,35 @@ public class CBooking {
         this.credCardExpire = credCardExpire;
         this.credCardCVC = credCardCVC;
     }
+
+    protected CBooking(Parcel in) {
+        pkBooking = in.readInt();
+        fkRoom = in.readInt();
+        fkUser = in.readInt();
+        dateCheckIn = in.readString();
+        dateCheckOut = in.readString();
+        numAdults = in.readInt();
+        numChildren = in.readInt();
+        status = in.readString();
+        totalFeePerNight = in.readDouble();
+        credCardName = in.readString();
+        credCardType = in.readString();
+        credCardNumber = in.readString();
+        credCardExpire = in.readString();
+        credCardCVC = in.readString();
+    }
+
+    public static final Creator<CBooking> CREATOR = new Creator<CBooking>() {
+        @Override
+        public CBooking createFromParcel(Parcel in) {
+            return new CBooking(in);
+        }
+
+        @Override
+        public CBooking[] newArray(int size) {
+            return new CBooking[size];
+        }
+    };
 
     public int getpkBooking() {
         return pkBooking;
@@ -301,5 +332,28 @@ public class CBooking {
         }
 
         return true;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(pkBooking);
+        dest.writeInt(fkRoom);
+        dest.writeInt(fkUser);
+        dest.writeString(dateCheckIn);
+        dest.writeString(dateCheckOut);
+        dest.writeInt(numAdults);
+        dest.writeInt(numChildren);
+        dest.writeString(status);
+        dest.writeDouble(totalFeePerNight);
+        dest.writeString(credCardName);
+        dest.writeString(credCardType);
+        dest.writeString(credCardNumber);
+        dest.writeString(credCardExpire);
+        dest.writeString(credCardCVC);
     }
 }

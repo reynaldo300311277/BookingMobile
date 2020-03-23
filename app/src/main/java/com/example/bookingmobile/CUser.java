@@ -2,11 +2,13 @@ package com.example.bookingmobile;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-public class CUser {
-
+public class CUser implements Parcelable
+{
     private SQLiteDatabase mDatabase;
 
     private int pkUser;
@@ -30,6 +32,25 @@ public class CUser {
         this.hashPassword = hashPassword;
         this.email = email;
     }
+
+    protected CUser(Parcel in) {
+        pkUser = in.readInt();
+        loginName = in.readString();
+        hashPassword = in.readString();
+        email = in.readString();
+    }
+
+    public static final Creator<CUser> CREATOR = new Creator<CUser>() {
+        @Override
+        public CUser createFromParcel(Parcel in) {
+            return new CUser(in);
+        }
+
+        @Override
+        public CUser[] newArray(int size) {
+            return new CUser[size];
+        }
+    };
 
     public int getPkUser() {
         return pkUser;
@@ -170,5 +191,18 @@ public class CUser {
         this.bookings = bookings;
 
         return true;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(pkUser);
+        dest.writeString(loginName);
+        dest.writeString(hashPassword);
+        dest.writeString(email);
     }
 }

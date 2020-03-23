@@ -3,6 +3,7 @@ package com.example.bookingmobile;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +46,12 @@ public class MainActivity extends AppCompatActivity
                         "2019-06-07","2019-06-10",1,4,
                         4);
 
+                // ***
+                // How to pass an Object using Parceable => it is the same like a String or Integer
+                //Intent intent = new Intent(MainActivity.this, testParceable.class);
+                //intent.putExtra("CHOTEL", arrayListHotels.get(0));
+                //startActivity(intent);
+
                 // Create an object with all rooms from the selected hotel
                 CRoomsFromHotel roomsFromHotel = new CRoomsFromHotel(arrayListHotels.get(0));
 
@@ -65,7 +72,7 @@ public class MainActivity extends AppCompatActivity
                              Toast.LENGTH_SHORT).show();
 
                  // creating and inserting a new booking - it is open to insertion
-                 CBooking newBooking = new CBooking(dbHelper.getWritableDatabase());
+/*                 CBooking newBooking = new CBooking(dbHelper.getWritableDatabase());
 
                  if (newBooking.addBooking(1,1,"2020-02-01",
                          "2020-02-05",2,1,"1",
@@ -77,7 +84,7 @@ public class MainActivity extends AppCompatActivity
                  else
                      Toast.makeText(MainActivity.this,"Booking NOT inserted",
                              Toast.LENGTH_SHORT).show();
-            }
+*/            }
         });
     }
 

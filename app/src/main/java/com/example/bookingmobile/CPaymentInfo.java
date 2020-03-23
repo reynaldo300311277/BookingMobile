@@ -1,7 +1,10 @@
 package com.example.bookingmobile;
 
-public class CPaymentInfo {
+import android.os.Parcel;
+import android.os.Parcelable;
 
+public class CPaymentInfo implements Parcelable
+{
     private int fkUser;
     private String credCardName;
     private String credCardType;
@@ -21,6 +24,28 @@ public class CPaymentInfo {
         this.credCardCVC = credCardCVC;
         this.status = status;
     }
+
+    protected CPaymentInfo(Parcel in) {
+        fkUser = in.readInt();
+        credCardName = in.readString();
+        credCardType = in.readString();
+        credCardNumber = in.readString();
+        credCardExpire = in.readString();
+        credCardCVC = in.readString();
+        status = in.readString();
+    }
+
+    public static final Creator<CPaymentInfo> CREATOR = new Creator<CPaymentInfo>() {
+        @Override
+        public CPaymentInfo createFromParcel(Parcel in) {
+            return new CPaymentInfo(in);
+        }
+
+        @Override
+        public CPaymentInfo[] newArray(int size) {
+            return new CPaymentInfo[size];
+        }
+    };
 
     public int getFkUser() {
         return fkUser;
@@ -76,5 +101,21 @@ public class CPaymentInfo {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(fkUser);
+        dest.writeString(credCardName);
+        dest.writeString(credCardType);
+        dest.writeString(credCardNumber);
+        dest.writeString(credCardExpire);
+        dest.writeString(credCardCVC);
+        dest.writeString(status);
     }
 }

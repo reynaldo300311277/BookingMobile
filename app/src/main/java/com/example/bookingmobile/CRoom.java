@@ -1,8 +1,11 @@
 package com.example.bookingmobile;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
-public class CRoom
+public class CRoom implements Parcelable
 {
     private int pkRoom;
     private int fkHotel;
@@ -44,6 +47,32 @@ public class CRoom
         this.statusBegin = null;
         this.statusEnd = null;
     }
+
+    protected CRoom(Parcel in) {
+        pkRoom = in.readInt();
+        fkHotel = in.readInt();
+        price = in.readFloat();
+        type = in.readString();
+        description = in.readString();
+        maxNumAdults = in.readInt();
+        maxNumchildren = in.readInt();
+        status = in.readString();
+        statusBegin = in.readString();
+        statusEnd = in.readString();
+        arrayFacilitiesRoom = in.createStringArrayList();
+    }
+
+    public static final Creator<CRoom> CREATOR = new Creator<CRoom>() {
+        @Override
+        public CRoom createFromParcel(Parcel in) {
+            return new CRoom(in);
+        }
+
+        @Override
+        public CRoom[] newArray(int size) {
+            return new CRoom[size];
+        }
+    };
 
     public int getPkRoom() {
         return pkRoom;
@@ -147,5 +176,25 @@ public class CRoom
 
     public ArrayList<CPhotos> getArrayPhotos() {
         return arrayPhotos;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(pkRoom);
+        dest.writeInt(fkHotel);
+        dest.writeFloat(price);
+        dest.writeString(type);
+        dest.writeString(description);
+        dest.writeInt(maxNumAdults);
+        dest.writeInt(maxNumchildren);
+        dest.writeString(status);
+        dest.writeString(statusBegin);
+        dest.writeString(statusEnd);
+        dest.writeStringList(arrayFacilitiesRoom);
     }
 }
