@@ -1,6 +1,9 @@
 package com.example.bookingmobile;
 
-public class CSightseeing
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class CSightseeing implements Parcelable
 {
     private int pkSightseeing;
     private int fkHotel;
@@ -13,6 +16,25 @@ public class CSightseeing
         this.name = name;
         this.distance = distance;
     }
+
+    protected CSightseeing(Parcel in) {
+        pkSightseeing = in.readInt();
+        fkHotel = in.readInt();
+        name = in.readString();
+        distance = in.readFloat();
+    }
+
+    public static final Creator<CSightseeing> CREATOR = new Creator<CSightseeing>() {
+        @Override
+        public CSightseeing createFromParcel(Parcel in) {
+            return new CSightseeing(in);
+        }
+
+        @Override
+        public CSightseeing[] newArray(int size) {
+            return new CSightseeing[size];
+        }
+    };
 
     public int getPkSightseeing() {
         return pkSightseeing;
@@ -44,5 +66,18 @@ public class CSightseeing
 
     public void setDistance(float distance) {
         this.distance = distance;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(pkSightseeing);
+        dest.writeInt(fkHotel);
+        dest.writeString(name);
+        dest.writeFloat(distance);
     }
 }

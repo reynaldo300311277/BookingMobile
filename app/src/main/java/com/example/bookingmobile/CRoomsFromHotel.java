@@ -2,8 +2,8 @@ package com.example.bookingmobile;
 
 import java.util.ArrayList;
 
-public class CRoomsFromHotel {
-
+public class CRoomsFromHotel
+{
     private CHotel hotel;
     private ArrayList<String> listFilters = new ArrayList<>();
 

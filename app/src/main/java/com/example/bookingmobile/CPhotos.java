@@ -1,6 +1,9 @@
 package com.example.bookingmobile;
 
-public class CPhotos
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class CPhotos implements Parcelable
 {
     private int pkPhoto;
     private int fkRoom;
@@ -11,6 +14,24 @@ public class CPhotos
         this.fkRoom = fkRoom;
         this.idxImage = idxImage;
     }
+
+    protected CPhotos(Parcel in) {
+        pkPhoto = in.readInt();
+        fkRoom = in.readInt();
+        idxImage = in.readInt();
+    }
+
+    public static final Creator<CPhotos> CREATOR = new Creator<CPhotos>() {
+        @Override
+        public CPhotos createFromParcel(Parcel in) {
+            return new CPhotos(in);
+        }
+
+        @Override
+        public CPhotos[] newArray(int size) {
+            return new CPhotos[size];
+        }
+    };
 
     public int getPkPhoto() {
         return pkPhoto;
@@ -34,5 +55,17 @@ public class CPhotos
 
     public void setIdxImage(int IdxImage) {
         this.idxImage = IdxImage;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(pkPhoto);
+        dest.writeInt(fkRoom);
+        dest.writeInt(idxImage);
     }
 }

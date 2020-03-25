@@ -1,8 +1,11 @@
 package com.example.bookingmobile;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
-public class CHotel
+public class CHotel implements Parcelable
 {
     private int pkHotel;
     private String name;
@@ -26,16 +29,30 @@ public class CHotel
         this.longitude = -1;
     }
 
-    public CHotel(int pkHotel, String name, String city, String province, String description,
-                  float latitude, float longitude) {
-        this.pkHotel = pkHotel;
-        this.name = name;
-        this.city = city;
-        this.province = province;
-        this.description = description;
-        this.latitude = latitude;
-        this.longitude = longitude;
+    protected CHotel(Parcel in) {
+        pkHotel = in.readInt();
+        name = in.readString();
+        city = in.readString();
+        province = in.readString();
+        description = in.readString();
+        latitude = in.readFloat();
+        longitude = in.readFloat();
+        arrayFacilitiesHotel = in.createStringArrayList();
+        arrayRooms = in.createTypedArrayList(CRoom.CREATOR);
+        arraySightseeing = in.createTypedArrayList(CSightseeing.CREATOR);
     }
+
+    public static final Creator<CHotel> CREATOR = new Creator<CHotel>() {
+        @Override
+        public CHotel createFromParcel(Parcel in) {
+            return new CHotel(in);
+        }
+
+        @Override
+        public CHotel[] newArray(int size) {
+            return new CHotel[size];
+        }
+    };
 
     public int getPkHotel() {
         return pkHotel;
@@ -120,5 +137,24 @@ public class CHotel
 
     public ArrayList<CRoom> getArrayRooms() {
         return arrayRooms;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(pkHotel);
+        dest.writeString(name);
+        dest.writeString(city);
+        dest.writeString(province);
+        dest.writeString(description);
+        dest.writeFloat(latitude);
+        dest.writeFloat(longitude);
+        dest.writeStringList(arrayFacilitiesHotel);
+        dest.writeTypedList(arrayRooms);
+        dest.writeTypedList(arraySightseeing);
     }
 }

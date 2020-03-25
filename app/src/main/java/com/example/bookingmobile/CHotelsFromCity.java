@@ -292,6 +292,7 @@ public class CHotelsFromCity
         {
         }
 
+        mDatabase.close();
         return arrayHotels;
     }
 }
