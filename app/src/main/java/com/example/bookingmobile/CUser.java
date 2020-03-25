@@ -1,5 +1,6 @@
 package com.example.bookingmobile;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
@@ -9,8 +10,6 @@ import java.util.ArrayList;
 
 public class CUser implements Parcelable
 {
-    private SQLiteDatabase mDatabase;
-
     private int pkUser;
     private String loginName;
     private String hashPassword;
@@ -19,18 +18,21 @@ public class CUser implements Parcelable
     private ArrayList<CPaymentInfo> paymentInfos = new ArrayList<>();
     private ArrayList<CBooking> bookings = new ArrayList<>();
 
-    public CUser (String loginName, String hashPassword) {
-        this.pkUser = -1;
-        this.loginName = loginName;
-        this.hashPassword = hashPassword;
-        this.email = "";
-    }
-
     public CUser (int pkUser, String loginName, String hashPassword, String email) {
         this.pkUser = pkUser;
         this.loginName = loginName;
         this.hashPassword = hashPassword;
         this.email = email;
+    }
+
+    private CUser (int pkUser, String loginName, String hashPassword, String email,
+                   ArrayList<CPaymentInfo> paymentInfos, ArrayList<CBooking> bookings) {
+        this.pkUser = pkUser;
+        this.loginName = loginName;
+        this.hashPassword = hashPassword;
+        this.email = email;
+        this.paymentInfos = paymentInfos;
+        this.bookings = bookings;
     }
 
     protected CUser(Parcel in) {
@@ -96,28 +98,105 @@ public class CUser implements Parcelable
         this.bookings = bookings;
     }
 
-    public boolean checkAuthentication(SQLiteDatabase mDatabase) {
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-        this.mDatabase = mDatabase;
-        Cursor cursorUser;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(pkUser);
+        dest.writeString(loginName);
+        dest.writeString(hashPassword);
+        dest.writeString(email);
+    }
+
+    public static CUser addUser(SQLiteDatabase db, String loginName,
+                                String hashPassword, String email){
+        SQLiteDatabase mDatabase = db;
 
         // check if user exist
-        String queryUser = "SELECT pkUser, loginName, hashPassword, email " +
+        String queryUser = "SELECT loginName " +
                 "FROM User " +
-                "WHERE loginName LIKE '" + this.loginName + "' " +
-                "AND hashPassword LIKE '" + this.hashPassword + "'";
+                "WHERE loginName = '" + loginName + "'";
 
+        Cursor cursorUser;
         cursorUser = mDatabase.rawQuery(queryUser,null);
 
+        if (cursorUser.getCount() > 0) {
+            return null;
+        }
+
+        // insert the booking on database
+        ContentValues val = new ContentValues();
+        val.put("loginName", loginName);
+        val.put("hashPassword", hashPassword);
+        val.put("email", email);
+
+        try {
+            long result = db.insert("User",null, val);
+
+            if (result == -1)
+                return null;
+        }
+        catch (Exception ex){
+            return null;
+        }
+
+        String queryInsert = "INSERT INTO User(loginName, hashPassword, email) " +
+                "VALUES ('" + loginName + "', '" + hashPassword + "', '" + email + "');";
+
+        Cursor cursorInsertion = mDatabase.rawQuery(queryInsert, null);
+        cursorInsertion.close();
+
+        // retrieve the new user to return
+        String queryNewUser = "SELECT pkUser, loginName, hashPassword, email " +
+                "FROM User " +
+                "WHERE loginName = '" + loginName + "';";
+
+        Cursor cursorNewUser;
+        cursorNewUser = mDatabase.rawQuery(queryNewUser,null);
+        cursorNewUser.moveToFirst();
+        int pkUser = cursorNewUser.getInt(cursorNewUser.getColumnIndex("pkUser"));
+
+        return new CUser(pkUser, loginName, hashPassword, email);
+    }
+
+    public static boolean checkAuthentication(SQLiteDatabase db,  String loginName,
+                                       String hashPassword) {
+        SQLiteDatabase mDatabase = db;
+
+        String queryUser = "SELECT pkUser, loginName, hashPassword, email " +
+                "FROM User " +
+                "WHERE loginName LIKE '" + loginName + "' " +
+                "AND hashPassword LIKE '" + hashPassword + "'";
+
+        Cursor cursorUser = mDatabase.rawQuery(queryUser, null);
+
+        if (cursorUser.getCount() == 0) { return false; }
+
+        return true;
+    }
+
+    public static CUser getAllDataFromUser(SQLiteDatabase db,  String loginName,
+                                       String hashPassword) {
+        SQLiteDatabase mDatabase = db;
+
+        String queryUser = "SELECT pkUser, loginName, hashPassword, email " +
+                "FROM User " +
+                "WHERE loginName LIKE '" + loginName + "' " +
+                "AND hashPassword LIKE '" + hashPassword + "'";
+
+        Cursor cursorUser = mDatabase.rawQuery(queryUser, null);
+
         if (cursorUser.getCount() == 0) {
-            mDatabase.close();
-            return false;
+            return null;
         }
 
         cursorUser.moveToFirst();
 
-        this.pkUser = cursorUser.getInt(cursorUser.getColumnIndex("pkUser"));
-        this.email = cursorUser.getString(cursorUser.getColumnIndex("email"));
+        int pkUser = cursorUser.getInt(cursorUser.getColumnIndex("pkUser"));
+        String email = cursorUser.getString(cursorUser.getColumnIndex("email"));
 
         // select all user paymento
         Cursor cursorPayment;
@@ -126,7 +205,7 @@ public class CUser implements Parcelable
         String queryPayment = "SELECT pkPayment, credCardName, credCardType, credCardNumber, " +
                 "credCardExpire, credCardCVC, status " +
                 "FROM PaymentInfo " +
-                "WHERE fkUser = '" + this.pkUser + "'";
+                "WHERE fkUser = '" + pkUser + "'";
 
         cursorPayment = mDatabase.rawQuery(queryPayment,null);
 
@@ -141,7 +220,7 @@ public class CUser implements Parcelable
                 String credCardCVC = cursorPayment.getString(cursorPayment.getColumnIndex("credCardCVC"));
                 String status = cursorPayment.getString(cursorPayment.getColumnIndex("status"));
 
-                CPaymentInfo paymentInfo = new CPaymentInfo(this.pkUser, credCardName, credCardType,
+                CPaymentInfo paymentInfo = new CPaymentInfo(pkUser, credCardName, credCardType,
                         credCardNumber, credCardExpire, credCardCVC, status);
 
                 paymentInfos.add(paymentInfo);
@@ -156,7 +235,7 @@ public class CUser implements Parcelable
                 "numChildren, status, totalFeePerNight, credCardName, credCardType, " +
                 "credCardNumber, credCardExpire, credCardCVC " +
                 "FROM Booking " +
-                "WHERE fkUser = '" + this.pkUser + "'";
+                "WHERE fkUser = '" + pkUser + "'";
 
         cursorBooking = mDatabase.rawQuery(queryBooking,null);
 
@@ -186,23 +265,6 @@ public class CUser implements Parcelable
             }
         }
 
-        mDatabase.close();
-        this.paymentInfos = paymentInfos;
-        this.bookings = bookings;
-
-        return true;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(pkUser);
-        dest.writeString(loginName);
-        dest.writeString(hashPassword);
-        dest.writeString(email);
+        return new CUser(pkUser, loginName, hashPassword, email, paymentInfos, bookings);
     }
 }

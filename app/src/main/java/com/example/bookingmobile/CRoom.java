@@ -34,20 +34,6 @@ public class CRoom implements Parcelable
         this.statusEnd = null;
     }
 
-    public CRoom(int pkRoom, int fkHotel, float price, String type, String description,
-                 int maxNumAdults, int maxNumchildren, String status) {
-        this.pkRoom = pkRoom;
-        this.fkHotel = fkHotel;
-        this.price = price;
-        this.type = type;
-        this.description = description;
-        this.maxNumAdults = maxNumAdults;
-        this.maxNumchildren = maxNumchildren;
-        this.status = status;
-        this.statusBegin = null;
-        this.statusEnd = null;
-    }
-
     protected CRoom(Parcel in) {
         pkRoom = in.readInt();
         fkHotel = in.readInt();

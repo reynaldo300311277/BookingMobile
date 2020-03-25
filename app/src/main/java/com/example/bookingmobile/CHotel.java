@@ -29,17 +29,6 @@ public class CHotel implements Parcelable
         this.longitude = -1;
     }
 
-    public CHotel(int pkHotel, String name, String city, String province, String description,
-                  float latitude, float longitude) {
-        this.pkHotel = pkHotel;
-        this.name = name;
-        this.city = city;
-        this.province = province;
-        this.description = description;
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
-
     protected CHotel(Parcel in) {
         pkHotel = in.readInt();
         name = in.readString();

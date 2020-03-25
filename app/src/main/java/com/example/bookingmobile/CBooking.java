@@ -11,8 +11,6 @@ import java.util.Date;
 
 public class CBooking implements Parcelable
 {
-    private SQLiteDatabase mDatabase;
-
     private int pkBooking;
     private int fkRoom;
     private int fkUser;
@@ -27,10 +25,9 @@ public class CBooking implements Parcelable
     private String credCardNumber;
     private String credCardExpire;
     private String credCardCVC;
-
-    public CBooking(SQLiteDatabase mDatabase) {
-        this.mDatabase = mDatabase;
-    }
+    // 0 - deleted
+    // 1 - not deleted
+    private int flagDeleted;
 
     public CBooking(int pkBooking, int fkUser, String dateCheckIn, String dateCheckOut,
                     int numAdults, int numChildren, String status, double totalFeePerNight,
@@ -49,6 +46,7 @@ public class CBooking implements Parcelable
         this.credCardNumber = credCardNumber;
         this.credCardExpire = credCardExpire;
         this.credCardCVC = credCardCVC;
+        this.flagDeleted = 1;
     }
 
     protected CBooking(Parcel in) {
@@ -192,58 +190,58 @@ public class CBooking implements Parcelable
         this.credCardCVC = credCardCVC;
     }
 
-    public boolean addBooking (int fkRoom, int fkUser, String dateCheckIn, String dateCheckOut,
-                               int numAdults, int numChildren, String status, double totalFeePerNight,
-                               String credCardName, String credCardType, String credCardNumber,
-                               String credCardExpire, String credCardCVC) {
+    public static CBooking addBooking (SQLiteDatabase db, int fkRoom, int fkUser,
+                 String dateCheckIn, String dateCheckOut, int numAdults, int numChildren,
+                 String status, double totalFeePerNight, String credCardName, String credCardType,
+                 String credCardNumber, String credCardExpire, String credCardCVC) {
+
+        int lastPkBooking;
+
         try {
             // check if these values were filled
             if (dateCheckIn.isEmpty() || dateCheckOut.isEmpty() || status.isEmpty() ||
                     credCardName.isEmpty() || credCardType.isEmpty() || credCardNumber.isEmpty() ||
                     credCardExpire.isEmpty() || credCardCVC.isEmpty())
-                return false;
+                return null;
 
             // check if these values are positives and less than the threshold
             if (fkUser< 0 || numAdults < 0 || numChildren < 0 || totalFeePerNight < 0 ||
                     fkUser > 1100 || numAdults > 4 || numChildren > 4)
-                return false;
+                return null;
 
             // check if the format of check-in/check-out/expire date is correct
             if (!isDateValid(dateCheckIn, "yyyy-MM-dd") &&
                     !isDateValid(dateCheckOut, "yyyy-MM-dd") &&
                     !isDateValid(credCardExpire, "yyyy-MM"))
-                return false;
+                return null;
 
             // check if check-in date is before the check-out
             if (dateCheckIn.compareTo(dateCheckOut) >= 0)
-                return false;
+                return null;
 
             // check if the credit card and cvc are numerics
             if (!isNumeric(credCardNumber) || !isNumeric(credCardCVC))
-                return false;
+                return null;
 
             // check if the type of credit card is VISA or MASTERCARD
             if (!(credCardType.toLowerCase().equals("visa") || credCardType.toLowerCase().equals("mastercard")))
-                return false;
+                return null;
 
             // check if the card name is not empty
             if (credCardName.isEmpty())
-                return false;
-
-            // check if fkUser is integer and exist
-            Cursor cursorUser;
+                return null;
 
             // check if user exist
             String queryUser = "SELECT pkUser " +
                     "FROM User " +
                     "WHERE pkUser = '" + fkUser + "'";
 
-            cursorUser = mDatabase.rawQuery(queryUser,null);
+            SQLiteDatabase mDatabase = db;
+            Cursor cursorUser = mDatabase.rawQuery(queryUser,null);
 
             // user does not exist - returns and it is necessary to enter the user before
             if (cursorUser.getCount() == 0) {
-                mDatabase.close();
-                return false;
+                return null;
             }
 
             // check if fkUser is integer and exist
@@ -258,20 +256,17 @@ public class CBooking implements Parcelable
 
             // room does not exist
             if (cursorRoom.getCount() == 0) {
-                mDatabase.close();
-                return false;
+                return null;
             }
-
-            this.fkRoom = fkRoom;
 
             // insert the booking no database
             String queryInsertBook = "INSERT INTO Booking(fkUser, dateCheckIn, dateCheckOut, " +
                         "numAdults, numChildren, status, totalFeePerNight, credCardName, " +
-                        "credCardType, credCardNumber, credCardExpire, credCardCVC) " +
+                        "credCardType, credCardNumber, credCardExpire, credCardCVC, flagDeleted) " +
                     "VALUES (" + fkUser + ", '" + dateCheckIn + "', '" + dateCheckOut + "', " +
                         numAdults + ", " + numChildren + ", '" + status + "', " +
                         totalFeePerNight + ", '" +  credCardName + "', '" + credCardType + "', '" +
-                        credCardNumber + "', '" + credCardExpire + "', '" + credCardCVC + "');";
+                        credCardNumber + "', '" + credCardExpire + "', '" + credCardCVC + "', 1);";
 
             Cursor cursorInsertion = mDatabase.rawQuery(queryInsertBook, null);
             cursorInsertion.moveToLast();
@@ -283,7 +278,7 @@ public class CBooking implements Parcelable
             String queryLastBooking = "SELECT seq FROM sqlite_sequence WHERE name LIKE 'Booking'";
             cursorLastBooking = mDatabase.rawQuery(queryLastBooking, null);
             cursorLastBooking.moveToFirst();
-            int lastPkBooking = cursorLastBooking.getInt(cursorLastBooking.getColumnIndex("seq"));
+            lastPkBooking = cursorLastBooking.getInt(cursorLastBooking.getColumnIndex("seq"));
 
             // insert the relationship between the booking and the room
             String queryRelation = "INSERT INTO Booking_Room(fkBooking, fkRoom) VALUES (" +
@@ -296,14 +291,15 @@ public class CBooking implements Parcelable
         // if any conversion failed throws the exception and return false
         catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
 
-        mDatabase.close();
-        return true;
+        return new CBooking(lastPkBooking, fkUser, dateCheckIn, dateCheckOut, numAdults, numChildren,
+                status, totalFeePerNight, credCardName, credCardType, credCardNumber,
+                credCardExpire, credCardCVC);
     }
 
-    private boolean isNumeric(String str) {
+    private static boolean isNumeric(String str) {
         try {
             Double.parseDouble(str);
             return true;
@@ -313,7 +309,7 @@ public class CBooking implements Parcelable
         }
     }
 
-    private boolean isDateValid(String dateToValidate, String dateFromat){
+    private static boolean isDateValid(String dateToValidate, String dateFromat){
 
         if(dateToValidate == null){
             return false;
