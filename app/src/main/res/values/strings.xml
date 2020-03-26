@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Booking Mobile</string>
+    <string name="textIn">In</string>
+    <string name="textOut">Out</string>
+    <string name="textRooms">Rooms</string>
+    <string name="textAdults">Adults</string>
+    <string name="textChildren">Children</string>
+    <string name="textBookingTitle">Booking</string>
+    <string name="textDestiny">Destiny</string>
+    <string-array name="textDestinyCities">
+        <item>Vancouver</item>
+        <item>Victoria</item>
+        <item>Calgary</item>
+        <item>Edmonton</item>
+    </string-array>
+
 </resources>
