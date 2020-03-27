@@ -25,6 +25,7 @@ public class CBooking implements Parcelable
     private String credCardNumber;
     private String credCardExpire;
     private String credCardCVC;
+
     // 0 - deleted
     // 1 - not deleted
     private int flagDeleted;

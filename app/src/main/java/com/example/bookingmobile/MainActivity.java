@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
@@ -29,6 +30,9 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
 
                 // INTERFACE #1
+                // Get the relation of destinations
+                ArrayList<String> destinations = CDestinations.getDestinations(dbHelper.getReadableDatabase());
+
                 // Create a CHotelsFromCity and set the filters
                 CHotelsFromCity hotelsFromCity = new CHotelsFromCity(dbHelper.getReadableDatabase());
                 String test = hotelsFromCity.setFiltersHotels(true,true,

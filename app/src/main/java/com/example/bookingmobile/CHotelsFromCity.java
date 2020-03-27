@@ -105,7 +105,6 @@ public class CHotelsFromCity
             cursor = mDatabase.rawQuery(query,null);
 
             if (cursor.getCount() == 0) {
-                mDatabase.close();
                 return null;
             }
 
