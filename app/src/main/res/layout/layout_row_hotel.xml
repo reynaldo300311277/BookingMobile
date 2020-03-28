@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/txtRoomType"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_weight="0.5"
+        android:gravity="center_vertical"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/iconInfoRoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.01"
+        app:srcCompat="@android:drawable/ic_menu_info_details" />
+
+    <ImageView
+        android:id="@+id/iconPhotoRoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.0"
+        app:srcCompat="@android:drawable/ic_menu_camera" />
+
+    <TextView
+        android:id="@+id/txtPriceRoom"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_weight="0.30"
+        android:gravity="center_vertical"
+        android:textAllCaps="false"
+        android:textColor="@android:color/background_dark"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+</LinearLayout>
