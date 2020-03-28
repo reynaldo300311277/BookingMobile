@@ -7,6 +7,15 @@
     <string name="textChildren">Children</string>
     <string name="textBookingTitle">Booking</string>
     <string name="textDestiny">Destiny</string>
+    <string name="txtInfo1">Check-In</string>
+    <string name="txtInfo2">Check-Out</string>
+    <string name="txtInfo3"># 5ooms</string>
+    <string name="txtInfo4"># Adults</string>
+    <string name="txtInfo5"># Children</string>
+    <string name="txtInfo6">City</string>
+    <string name="txtInfo7">HOTEL</string>
+    <string name="btnRoomFilter">Filter</string>
+    <string name="btnBook">Book</string>
     <string-array name="textDestinyCities">
         <item>Vancouver</item>
         <item>Victoria</item>

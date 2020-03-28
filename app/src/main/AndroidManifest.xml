@@ -9,15 +9,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".testParceable"></activity>
-        <activity android:name=".CBooking$parceableTest" />
         <activity android:name=".MainActivity">
+
+        </activity>
+        <activity android:name=".TestCode" />
+        <activity android:name=".testParceable" />
+        <activity android:name=".ActivityRoomFilter">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
 
 </manifest>
+
+
+<!--
+<activity android:name=".CBooking$parceableTest" />
+
+-->
