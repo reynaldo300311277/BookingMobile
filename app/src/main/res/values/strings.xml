@@ -9,13 +9,25 @@
     <string name="textDestiny">Destiny</string>
     <string name="txtInfo1">Check-In</string>
     <string name="txtInfo2">Check-Out</string>
-    <string name="txtInfo3"># 5ooms</string>
+    <string name="txtInfo3"># Rooms</string>
     <string name="txtInfo4"># Adults</string>
     <string name="txtInfo5"># Children</string>
     <string name="txtInfo6">City</string>
     <string name="txtInfo7">HOTEL</string>
     <string name="btnRoomFilter">Filter</string>
+    <string name="btnHotelFilter">Filter</string>
+    <string name="btnSearch">Search</string>
     <string name="btnBook">Book</string>
+    <string name="txtFilterHotel1">Hotel Facilites</string>
+    <string name="chboxDoubleBed">Double Bed</string>
+    <string name="chboxFreeWifi">Free Wi-Fi</string>
+    <string name="chboxGym">Gym</string>
+    <string name="chboxParking">Parking</string>
+    <string name="chboxPetFriendly">Pet Friendly</string>
+    <string name="chboxSauna">Sauna</string>
+    <string name="chboxSmokingFree">Smoking Free</string>
+    <string name="chboxSwimmingPool">Swimming Pool</string>
+    <string name="btnConfirm">Confirm</string>
     <string-array name="textDestinyCities">
         <item>Vancouver</item>
         <item>Victoria</item>

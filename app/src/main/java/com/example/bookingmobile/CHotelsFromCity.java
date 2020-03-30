@@ -93,13 +93,13 @@ public class CHotelsFromCity
                         "INNER JOIN Booking AS b ON br.fkBooking = b.pkBooking " +
                     "WHERE " +
                         "h.city = '" + this.city + "' AND " +
-                        "r.maxNumAdults <= " + this.numAdults + " AND " +
-                        "r.maxNumChildren <= " + this.numChildren + " AND " +
+                        "r.maxNumAdults >= " + this.numAdults + " AND " +
+                        "r.maxNumChildren >= " + this.numChildren + " AND " +
                         "b.dateCheckIn NOT BETWEEN '" + this.dateCheckIn + "' AND '" + this.dateCheckOut + "' AND " +
                         "b.dateCheckOut NOT BETWEEN '" + this.dateCheckIn + "' AND '" + this.dateCheckOut + "' AND " +
                         this.dateCheckIn + " NOT BETWEEN b.dateCheckIn AND b.dateCheckOut AND " +
                         this.dateCheckOut + " NOT BETWEEN b.dateCheckIn AND b.dateCheckOut AND " +
-                        "hhf.fkHotelFacility  IN (" + this.filters + ") " +
+                        "hhf.fkHotelFacility IN (" + this.filters + ") " +
                     "ORDER BY pkHotel, pkRoom";
 
             cursor = mDatabase.rawQuery(query,null);
