@@ -23,20 +23,6 @@
             android:textSize="24sp" />
     </RadioGroup>
 
-    <ImageView
-        android:id="@+id/iconInfo"
-        android:layout_width="30dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        app:srcCompat="@android:drawable/ic_menu_info_details" />
-
-    <ImageView
-        android:id="@+id/iconPhoto"
-        android:layout_width="30dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
-
     <TextView
         android:id="@+id/txtPrice"
         android:layout_width="110dp"
@@ -48,4 +34,19 @@
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/iconPhoto"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:visibility="invisible"
+        app:srcCompat="@android:drawable/ic_menu_camera" />
+
+    <ImageView
+        android:id="@+id/iconInfo"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        app:srcCompat="@android:drawable/ic_menu_info_details" />
 </LinearLayout>

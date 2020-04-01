@@ -94,4 +94,22 @@ public class CSQLiteHelper extends SQLiteOpenHelper
             }
         }
     }
+
+    public static SQLiteDatabase getConnection() {
+
+        SQLiteDatabase tempDB = null;
+
+        try {
+            String path = DB_PATH + DB_NAME;
+            tempDB = SQLiteDatabase.openDatabase(path,null, SQLiteDatabase.OPEN_READWRITE);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (tempDB != null)
+            tempDB.close();
+
+        return tempDB;
+    }
 }

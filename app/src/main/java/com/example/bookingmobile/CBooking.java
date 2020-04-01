@@ -224,7 +224,9 @@ public class CBooking implements Parcelable
                 return null;
 
             // check if the type of credit card is VISA or MASTERCARD
-            if (!(credCardType.toLowerCase().equals("visa") || credCardType.toLowerCase().equals("mastercard")))
+            if (!(credCardType.toLowerCase().equals("visa") ||
+                    credCardType.toLowerCase().equals("mastercard") ||
+                    credCardType.toLowerCase().equals("american express")))
                 return null;
 
             // check if the card name is not empty
@@ -236,8 +238,7 @@ public class CBooking implements Parcelable
                     "FROM User " +
                     "WHERE pkUser = '" + fkUser + "'";
 
-            SQLiteDatabase mDatabase = db;
-            Cursor cursorUser = mDatabase.rawQuery(queryUser,null);
+            Cursor cursorUser = db.rawQuery(queryUser,null);
 
             // user does not exist - returns and it is necessary to enter the user before
             if (cursorUser.getCount() == 0) {
@@ -252,7 +253,7 @@ public class CBooking implements Parcelable
                     "FROM Room " +
                     "WHERE pkRoom = '" + fkRoom + "'";
 
-            cursorRoom = mDatabase.rawQuery(queryRoom,null);
+            cursorRoom = db.rawQuery(queryRoom,null);
 
             // room does not exist
             if (cursorRoom.getCount() == 0) {
@@ -268,7 +269,7 @@ public class CBooking implements Parcelable
                         totalFeePerNight + ", '" +  credCardName + "', '" + credCardType + "', '" +
                         credCardNumber + "', '" + credCardExpire + "', '" + credCardCVC + "', 1);";
 
-            Cursor cursorInsertion = mDatabase.rawQuery(queryInsertBook, null);
+            Cursor cursorInsertion = db.rawQuery(queryInsertBook, null);
             cursorInsertion.moveToLast();
             cursorInsertion.close();
 
@@ -276,7 +277,7 @@ public class CBooking implements Parcelable
             Cursor cursorLastBooking;
 
             String queryLastBooking = "SELECT seq FROM sqlite_sequence WHERE name LIKE 'Booking'";
-            cursorLastBooking = mDatabase.rawQuery(queryLastBooking, null);
+            cursorLastBooking = db.rawQuery(queryLastBooking, null);
             cursorLastBooking.moveToFirst();
             lastPkBooking = cursorLastBooking.getInt(cursorLastBooking.getColumnIndex("seq"));
 
@@ -284,7 +285,7 @@ public class CBooking implements Parcelable
             String queryRelation = "INSERT INTO Booking_Room(fkBooking, fkRoom) VALUES (" +
                     lastPkBooking + ", " + fkRoom + ");";
 
-            Cursor cursorRelation = mDatabase.rawQuery(queryRelation, null);
+            Cursor cursorRelation = db.rawQuery(queryRelation, null);
             cursorRelation.moveToFirst();
             cursorRelation.close();
         }

@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class ActivityRoomFilter extends AppCompatActivity implements MyRecyclerViewAdapterRooms.ItemClickListener{
 
@@ -23,6 +26,8 @@ public class ActivityRoomFilter extends AppCompatActivity implements MyRecyclerV
     private String numChildren;
     private String city;
     private String hotelName;
+    // valeu comes from Parcelable
+    private CHotel cHotel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +35,7 @@ public class ActivityRoomFilter extends AppCompatActivity implements MyRecyclerV
         setContentView(R.layout.activity_room_filter);
 
         Intent intent = getIntent();
-        CHotel cHotel = intent.getParcelableExtra("CHOTEL");
+        this.cHotel = intent.getParcelableExtra("CHOTEL");
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         this.dateIn = sharedPref.getString("DATE_IN", "01-01-2020");
@@ -57,8 +62,7 @@ public class ActivityRoomFilter extends AppCompatActivity implements MyRecyclerV
         txtCity.setText(this.city);
         txtHotelName.setText(this.hotelName);
 
- /*       ArrayList<CRoom> cRooms = cHotel.getArrayRooms();
-
+        ArrayList<CRoom> cRooms = cHotel.getArrayRooms();
         ArrayList<String[]> rooms  = new ArrayList<>();
 
         for (int i=0; i<cRooms.size(); i++)
@@ -68,14 +72,33 @@ public class ActivityRoomFilter extends AppCompatActivity implements MyRecyclerV
 
             rooms.add(new String[]{roomType, price});
         }
-*/
 
         // set up the RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewRooms);
+        final RecyclerView recyclerView = findViewById(R.id.recyclerViewRooms);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new MyRecyclerViewAdapterRooms(this, cHotel);
+        adapter = new MyRecyclerViewAdapterRooms(this, rooms, cHotel);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
+
+        Button btnConfirm = findViewById(R.id.btnBook);
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sharedPref =
+                        PreferenceManager.getDefaultSharedPreferences(ActivityRoomFilter.this);
+                int roomSelected = sharedPref.getInt("ROOM_SELECTED", -1);
+
+                if (roomSelected == -1) {
+                    Toast.makeText(ActivityRoomFilter.this,
+                            "Please, select a room before to book!", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Intent intent = new Intent(ActivityRoomFilter.this, ActivityConfirmBooking.class);
+                    intent.putExtra("CHOTEL", cHotel);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override

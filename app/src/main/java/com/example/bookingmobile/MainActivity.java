@@ -6,22 +6,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.LinearLayout;
 import android.widget.NumberPicker;
-import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,8 +72,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         textViewDateIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Start editing
-
                 int year = calIn.get(Calendar.YEAR);
                 int month = calIn.get(Calendar.MONTH);
                 int day = calIn.get(Calendar.DAY_OF_MONTH);
@@ -93,16 +84,12 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 
                 datePickerDialogIn.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 datePickerDialogIn.show();
-
-                // Finish editing
             }
         });
 
         textViewDateOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Start editing
-
                 int year = calOut.get(Calendar.YEAR);
                 int month = calOut.get(Calendar.MONTH);
                 int day = calOut.get(Calendar.DAY_OF_MONTH);
@@ -115,15 +102,12 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 
                 datePickerDialogOut.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 datePickerDialogOut.show();
-
-                // Finish editing
             }
         });
 
         datePickerDialogListenerIn = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
                 Calendar calToday = Calendar.getInstance();
                 calToday.set(Calendar.HOUR_OF_DAY, 0);
                 calToday.set(Calendar.MINUTE, 0);
@@ -147,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         datePickerDialogListenerOut = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
                 Calendar calTest = Calendar.getInstance();
                 calTest.set(year,month,dayOfMonth);
                 calTest.set(Calendar.HOUR_OF_DAY, 0);
@@ -166,18 +149,24 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
             }
         };
 
-        // sharedPreferences to send the dates and numbers
+        // define a SharedPreferences to be used
         sharedPref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        //SharedPreferences sharedPreferences=this.getSharedPreferences("com.example.bookingmobile", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
+
+        // initialize the SharedPreferences with default value;
+        editor.putInt("ROOM_SELECTED", -1);
+        editor.putString("DATE_IN", "2019-06-07");
+        editor.putString("DATE_OUT", "2019-06-10");
+        editor.putInt("NUM_ROOMS", 1);
+        editor.putInt("NUM_ADULTS", 2);
+        editor.putInt("NUM_CHILDREN", 1);
+        editor.commit();
 
         Button btnSearch = findViewById(R.id.btnSearch);
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 try {
-
                     NumberPicker numberPickerRooms = findViewById(R.id.numberPickerRooms);
                     NumberPicker numberPickerAdults = findViewById(R.id.numberPickerAdults);
                     NumberPicker numberPickerChildren = findViewById(R.id.numberPickerChildren);
@@ -193,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                     int numAdults = numberPickerAdults.getValue();          // COMPONENT IS NOT WORKING CORRECTLY!!!
                     int numChildren = numberPickerChildren.getValue();      // COMPONENT IS NOT WORKING CORRECTLY!!!
 
+                    // ******************************************************************************
                     // fake values to run => this code must be deleted when the above lines are ok!!!
                     dateIn = "2019-06-07";
                     dateOut = "2019-06-10";
@@ -200,56 +190,15 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                     numAdults = 2;
                     numChildren = 1;
                     city = "Edmonton";
+                    // ******************************************************************************
 
-                    // save all general information on shared preferences
-                    // TALVEZ É LIXO
-                    if (sharedPref.contains("DATE_IN")) {
-                        editor.putString("DATE_IN", dateIn);
-                        editor.apply();
-                    }
-                    else {
-                        editor.putString("DATE_IN", dateIn);
-                        editor.commit();
-                    }
-
-                    if (sharedPref.contains("DATE_OUT")) {
-                        editor.putString("DATE_OUT", dateOut);
-                        editor.apply();
-                    }
-                    else {
-                        editor.putString("DATE_OUT", dateOut);
-                        editor.commit();
-                    }
-
-                    if (sharedPref.contains("NUM_ROOMS")) {
-                        editor.putInt("NUM_ROOMS", numRooms);
-                        editor.apply();
-                    }
-                    else {
-                        editor.putInt("NUM_ROOMS", numRooms);
-                        editor.commit();
-                    }
-
-
-                    if (sharedPref.contains("NUM_ADULTS")) {
-                        editor.putInt("NUM_ADULTS", numAdults);
-                        editor.apply();
-                    }
-                    else {
-                        editor.putInt("NUM_ADULTS", numAdults);
-                        editor.commit();
-                    }
-
-
-                    if (sharedPref.contains("NUM_CHILDREN")) {
-                        editor.putInt("NUM_CHILDREN", numChildren);
-                        editor.apply();
-                    }
-                    else {
-                        editor.putInt("NUM_CHILDREN", numChildren);
-                        editor.commit();
-                    }
-                    // ATÉ AQUI!!
+                    // update the values in SharedPreferences
+                    editor.putString("DATE_IN", dateIn);
+                    editor.putString("DATE_OUT", dateOut);
+                    editor.putInt("NUM_ROOMS", numRooms);
+                    editor.putInt("NUM_ADULTS", numAdults);
+                    editor.putInt("NUM_CHILDREN", numChildren);
+                    editor.apply();
 
                     boolean hasParking = true;
                     boolean hasDoubleBed = true;
@@ -306,9 +255,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         btnHotelFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //Intent intent = new Intent(MainActivity.this, ActivityFiltersByHotel.class);
-                //startActivity(intent);
             }
         });
     }

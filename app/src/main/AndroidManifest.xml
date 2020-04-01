@@ -9,8 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ActivityFiltersByHotel"></activity>
-        <activity android:name=".ActivityRoomFilter"></activity>
+        <activity android:name=".ActivityConfirmBooking" />
+        <activity android:name=".ActivityFiltersByHotel" />
+        <activity android:name=".ActivityRoomFilter" />
         <activity android:name=".TestCode" />
         <activity android:name=".testParceable" />
         <activity android:name=".MainActivity">

@@ -33,11 +33,12 @@
         android:id="@+id/textIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="16dp"
         android:text="@string/textIn"
-        android:textSize="22sp"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textBookingTitle" />
 
@@ -45,10 +46,11 @@
         android:id="@+id/textOut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:text="@string/textOut"
-        android:textSize="22sp"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/editTextDateOut"
         app:layout_constraintTop_toTopOf="@+id/textIn" />
 
@@ -58,28 +60,30 @@
         android:layout_height="33dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="13dp"
         android:ems="10"
         android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/textIn"
-        app:layout_constraintTop_toTopOf="@+id/textIn" />
+        app:layout_constraintTop_toBottomOf="@+id/textBookingTitle" />
 
     <TextView
         android:id="@+id/editTextDateOut"
         android:layout_width="130dp"
         android:layout_height="33dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:ems="10"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textIn" />
+        app:layout_constraintTop_toBottomOf="@+id/textBookingTitle" />
 
     <NumberPicker
         android:id="@+id/numberPickerRooms"
         android:layout_width="40dp"
         android:layout_height="60dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="18dp"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/textRooms"
@@ -89,8 +93,8 @@
         android:id="@+id/numberPickerAdults"
         android:layout_width="40dp"
         android:layout_height="60dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/textAdults"
         app:layout_constraintTop_toTopOf="@+id/numberPickerRooms" />
@@ -99,8 +103,8 @@
         android:id="@+id/numberPickerChildren"
         android:layout_width="40dp"
         android:layout_height="60dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/textChildren"
         app:layout_constraintTop_toTopOf="@+id/numberPickerAdults" />
@@ -111,7 +115,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/textRooms"
-        android:textSize="18sp"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/textIn"
         app:layout_constraintTop_toTopOf="@+id/numberPickerRooms" />
 
@@ -119,10 +124,11 @@
         android:id="@+id/textAdults"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
-        android:layout_marginLeft="22dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
         android:text="@string/textAdults"
-        android:textSize="18sp"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/numberPickerRooms"
         app:layout_constraintTop_toTopOf="@+id/textRooms" />
 
@@ -130,10 +136,11 @@
         android:id="@+id/textChildren"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
-        android:layout_marginLeft="22dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
         android:text="@string/textChildren"
-        android:textSize="18sp"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/numberPickerAdults"
         app:layout_constraintTop_toTopOf="@+id/textRooms" />
 
@@ -144,6 +151,7 @@
         android:layout_marginTop="18dp"
         android:text="@string/textDestiny"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/textRooms"
         app:layout_constraintTop_toBottomOf="@+id/numberPickerRooms" />
 
@@ -151,8 +159,8 @@
         android:id="@+id/spinnerDestinyCities"
         android:layout_width="230dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
         android:textSize="30sp"
         app:layout_constraintStart_toEndOf="@+id/textViewDestiny"
         app:layout_constraintTop_toTopOf="@+id/textViewDestiny" />
@@ -163,7 +171,7 @@
         android:layout_height="40dp"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="260dp"
+        android:layout_marginTop="265dp"
         android:text="@string/btnHotelFilter"
         android:textAllCaps="false"
         android:textSize="15sp"
@@ -175,7 +183,7 @@
         android:id="@+id/btnSearch"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_marginTop="260dp"
+        android:layout_marginTop="265dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:text="@string/btnSearch"
@@ -188,7 +196,7 @@
         android:id="@+id/recyclerViewHotels"
         android:layout_width="400dp"
         android:layout_height="260dp"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="305dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
