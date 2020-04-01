@@ -2,10 +2,14 @@ package com.example.bookingmobile;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -22,28 +26,19 @@ public class MyRecyclerViewAdapterRooms extends
 {
     private List<String[]> mData;
     private LayoutInflater mInflater;
-    private ItemClickListener mClickListener;
     private RadioButton lastCheckedRB = null;
-
-
+    private CHotel hotel;
+    private MyRecyclerViewAdapterRooms.ItemClickListener mClickListener;
+    private Context context;
+    private SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
 
     // data is passed into the constructor
-    MyRecyclerViewAdapterRooms(Context context, CHotel cHotel) {//List<String[]> data) {
+    MyRecyclerViewAdapterRooms(Context context, List<String[]> data, CHotel hotel) {
+        this.context = context;
         this.mInflater = LayoutInflater.from(context);
-
-
-        ArrayList<CRoom> cRooms = cHotel.getArrayRooms();
-
-        //ArrayList<String[]> rooms  = new ArrayList<>();
-        this.mData = new ArrayList<>();
-
-        for (int i=0; i<cRooms.size(); i++)
-        {
-            String roomType = cRooms.get(i).getType();
-            String price = String.valueOf(cRooms.get(i).getPrice());
-
-            this.mData.add(new String[]{roomType, price});
-        }
+        this.mData = data;
+        this.hotel= hotel;
     }
 
     // inflates the row layout from xml when needed
@@ -54,8 +49,11 @@ public class MyRecyclerViewAdapterRooms extends
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         String[] roomType = mData.get(position);
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        editor = sharedPref.edit();
 
         holder.rdRoomType.setText(roomType[0]);
         holder.myPrice.setText("$ " + roomType[1] + " ");
@@ -69,6 +67,10 @@ public class MyRecyclerViewAdapterRooms extends
                 }
                 //store the clicked radiobutton
                 lastCheckedRB = checked_rb;
+
+                // update the room selected into SharedPreferences - value default was -1
+                editor.putInt("ROOM_SELECTED", position);
+                editor.apply();
             }
         });
     }
@@ -107,27 +109,52 @@ public class MyRecyclerViewAdapterRooms extends
 
             if (view.getId() == iconInfo.getId()) {
 
-                // *********************************************************
-                // LUGAR PARA CHAMAR O POP-UP DE INFORMAÇÕES DO QUARTO !!!!!
-                // *********************************************************
+                ArrayList<String> arrayListFacilities = hotel.getArrayRooms().
+                        get(getAdapterPosition()).getFacilitiesRoom();
 
-                Toast.makeText(view.getContext(), "INFO PRESSED => " +
-                        String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
-            } else {
+                // inflate the layout of the popup window
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+                View popupView = inflater.inflate(R.layout.popup_info_room, null);
 
-                // *********************************************************
-                // LUGAR PARA CHAMAR O POP-UP DE FOTOGRAFIAS DO QUARTO !!!!!
-                // *********************************************************
+                TextView txtPopupHotelName = popupView.findViewById(R.id.txtPopupRoomType);
+                txtPopupHotelName.setText(hotel.getArrayRooms().get(getAdapterPosition()).getType());
 
-                Toast.makeText(view.getContext(), "PHOTO PRESSED => " +
-                        String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                TextView txtFacilities = popupView.findViewById(R.id.txtFacilitiesRoom);
+                String facilities = "** Facilities **\n ";
+
+                for (int i=0; i< arrayListFacilities.size(); i++)
+                        facilities += arrayListFacilities.get(i) + "\n";
+
+                txtFacilities.setText(facilities);
+
+                // create the popup window
+                int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+                int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                final PopupWindow popupWindow = new PopupWindow(popupView, 900, height, true);
+
+                // show the popup window
+                popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+                // dismiss the popup window when touched
+                popupView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        popupWindow.dismiss();
+                        return true;
+                    }
+                });
+            }
+            else if (view.getId() == iconPhoto.getId()) {
+                // **************************************************
+                // PLACE TO CALL THE BEDROOM'S PHOTOGRAPHS POP-UP !!!
+                // **************************************************
+                // Toast.makeText(view.getContext(), "PHOTO PRESSED => " +
+                //        String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+            }
+            else {
+
             }
         }
-    }
-
-    // convenience method for getting data at click position
-    String getItem(int id) {
-        return mData.get(id).toString();
     }
 
     // allows clicks events to be caught

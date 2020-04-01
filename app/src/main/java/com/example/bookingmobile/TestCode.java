@@ -52,6 +52,9 @@ public class TestCode extends AppCompatActivity {
 //                ArrayList<CRoom> filteredRooms = roomsFromHotel.getRooms();
 //
 //
+
+
+
 //                // CHECK AUTHENTICATION OF USER - INTERFACE #f
 //                // return false if user does not exist
 //                 if (CUser.checkAuthentication(dbHelper.getReadableDatabase(),

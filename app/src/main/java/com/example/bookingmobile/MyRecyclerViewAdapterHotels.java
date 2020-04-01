@@ -2,6 +2,7 @@ package com.example.bookingmobile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -25,7 +27,10 @@ public class MyRecyclerViewAdapterHotels extends
     private List<String[]> mData;
     private LayoutInflater mInflater;
     private MyRecyclerViewAdapterHotels.ItemClickListener mClickListener;
+
     private Context context;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
 
     private static int clickedItem = -1;
 
@@ -35,6 +40,9 @@ public class MyRecyclerViewAdapterHotels extends
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
         this.arrayListHotels = arrayListHotels;
+
+        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        this.editor = sharedPref.edit();
     }
 
     // inflates the row layout from xml when needed
@@ -83,7 +91,6 @@ public class MyRecyclerViewAdapterHotels extends
 
             if (view.getId() == iconInfo.getId()) {
 
-                //int indexHotel = getAdapterPosition();
                 ArrayList<CSightseeing> arrayListSightseeing = arrayListHotels.get(getAdapterPosition()).getSightseeing();
                 ArrayList<String[]> listSightseeing = new ArrayList<>();
 
@@ -106,13 +113,10 @@ public class MyRecyclerViewAdapterHotels extends
                 TextView txtFacilities = popupView.findViewById(R.id.txtFacilities);
                 String facilities = "** Facilities **\n ";
 
-                for (int i=0; i< arrayListFacilities.size(); i++) {
+                for (int i=0; i< arrayListFacilities.size(); i++)
+                        facilities += arrayListFacilities.get(i) + "\n";
 
-                    if (i == arrayListFacilities.size()-1)
-                        facilities += arrayListFacilities.get(i);
-                    else
-                        facilities += arrayListFacilities.get(i) + ", ";
-                }
+                facilities += "\n** Sightseeing **";
 
                 txtFacilities.setText(facilities);
 
@@ -135,7 +139,6 @@ public class MyRecyclerViewAdapterHotels extends
                         return true;
                     }
                 });
-
             }
             else
             {

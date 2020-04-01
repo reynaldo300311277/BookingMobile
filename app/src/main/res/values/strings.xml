@@ -13,7 +13,7 @@
     <string name="txtInfo4"># Adults</string>
     <string name="txtInfo5"># Children</string>
     <string name="txtInfo6">City</string>
-    <string name="txtInfo7">HOTEL</string>
+    <string name="txtInfo7">Hotel</string>
     <string name="btnRoomFilter">Filter</string>
     <string name="btnHotelFilter">Filter</string>
     <string name="btnSearch">Search</string>
@@ -28,6 +28,18 @@
     <string name="chboxSmokingFree">Smoking Free</string>
     <string name="chboxSwimmingPool">Swimming Pool</string>
     <string name="btnConfirm">Confirm</string>
+    <string name="txtInfo3_1">Booking Details</string>
+    <string name="txtInfo3_2">Hotel</string>
+    <string name="txtInfo3_3">City</string>
+    <string name="txtInfo3_4">Room Type</string>
+    <string name="txtInfo3_5">In</string>
+    <string name="txtInfo3_6">Out</string>
+    <string name="txtInfo3_7">Payment Details</string>
+    <string name="txtInfo3_8">CARD NAME</string>
+    <string name="txtInfo3_9">CARD NUMBER</string>
+    <string name="txtInfo3_10">EXPIRE DATE</string>
+    <string name="txtInfo3_11">CVC</string>
+    <string name="btnConfirmBooking">Confirm Booking</string>
     <string-array name="textDestinyCities">
         <item>Vancouver</item>
         <item>Victoria</item>
