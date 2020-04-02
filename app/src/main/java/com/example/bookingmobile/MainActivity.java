@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -33,6 +34,9 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     private Calendar calIn;
     private Calendar calOut;
     private Spinner spinnerDestinyCities;
+    private NumberPicker numberPickerRoom;
+    private NumberPicker numberPickerAdults;
+    private NumberPicker numberPickerChildren;
 
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
@@ -55,10 +59,28 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         calOut = Calendar.getInstance();
         calOut.add(Calendar.DAY_OF_YEAR, 7);
 
-        textViewDateIn.setText(calIn.get(Calendar.MONTH)+1 + "/" +
+        SimpleDateFormat monthDateFormat = new SimpleDateFormat("MMM");
+
+        textViewDateIn.setText(monthDateFormat.format(calIn.getTime()) + "/" +
                 calIn.get(Calendar.DAY_OF_MONTH) + "/" +  calIn.get(Calendar.YEAR));
-        textViewDateOut.setText(calOut.get(Calendar.MONTH)+1 + "/" +
+        textViewDateOut.setText(monthDateFormat.format(calOut.getTime()) + "/" +
                 calOut.get(Calendar.DAY_OF_MONTH) + "/" +  calOut.get(Calendar.YEAR));
+
+        numberPickerRoom = findViewById(R.id.numberPickerRooms);
+        numberPickerAdults = findViewById(R.id.numberPickerAdults);
+        numberPickerChildren = findViewById(R.id.numberPickerChildren);
+
+        numberPickerRoom.setMinValue(1);
+        numberPickerRoom.setMaxValue(4);
+        numberPickerRoom.setWrapSelectorWheel(false);
+
+        numberPickerAdults.setMinValue(1);
+        numberPickerAdults.setMaxValue(4);
+        numberPickerAdults.setWrapSelectorWheel(false);
+
+        numberPickerChildren.setMinValue(1);
+        numberPickerChildren.setMaxValue(4);
+        numberPickerChildren.setWrapSelectorWheel(false);
 
         // retrieve all cities
         ArrayList<String> cities = CDestinations.getDestinations(dbHelper.getReadableDatabase());
@@ -122,9 +144,15 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                     return;
                 }
 
-                String strDate = month+1 + "/" + dayOfMonth + "/" + year;
-                textViewDateIn.setText(strDate);
                 calIn.set(year,month,dayOfMonth);
+//                SimpleDateFormat monthDateFormat = new SimpleDateFormat("MMM");
+//                String strDate = monthDateFormat.format(calIn.getTime()) + "/" + dayOfMonth + "/" + year;
+
+                SimpleDateFormat monthDateFormat = new SimpleDateFormat("MMM/dd/yyyy");
+                String strDate = monthDateFormat.format(calIn.getTime());
+
+                textViewDateIn.setText(strDate);
+
             }
         };
 
@@ -143,9 +171,10 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                     return;
                 }
 
-                String strDate = month+1 + "/" + dayOfMonth + "/" + year;
-                textViewDateOut.setText(strDate);
                 calOut.set(year,month,dayOfMonth);
+                SimpleDateFormat monthDateFormat = new SimpleDateFormat("MMM");
+                String strDate = monthDateFormat.format(calOut.getTime()) + "/" + dayOfMonth + "/" + year;
+                textViewDateOut.setText(strDate);
             }
         };
 
@@ -183,30 +212,13 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
             @Override
             public void onClick(View v) {
                 try {
-                    NumberPicker numberPickerRooms = findViewById(R.id.numberPickerRooms);
-                    NumberPicker numberPickerAdults = findViewById(R.id.numberPickerAdults);
-                    NumberPicker numberPickerChildren = findViewById(R.id.numberPickerChildren);
-
-                    // Reynaldo => review...
-                    // ***********************************************************************************************
-                    // RIGHT VALUES - BUT NOT USED UNTIL THE OBJECTS ARE FIXED !!!!!!!
-                    // ***********************************************************************************************
                     String city = spinnerDestinyCities.getSelectedItem().toString();
-                    String dateIn = textViewDateIn.getText().toString();    // MUST HAVE THE FORMAT "MM-DD-YYYY"
-                    String dateOut = textViewDateOut.getText().toString();  // MUST HAVE THE FORMAT "MM-DD-YYYY"
-                    int numRooms = numberPickerRooms.getValue();            // COMPONENT IS NOT WORKING CORRECTLY!!!
-                    int numAdults = numberPickerAdults.getValue();          // COMPONENT IS NOT WORKING CORRECTLY!!!
-                    int numChildren = numberPickerChildren.getValue();      // COMPONENT IS NOT WORKING CORRECTLY!!!
-
-                    // ******************************************************************************
-                    // fake values to run => this code must be deleted when the above lines are ok!!!
-                    dateIn = "2019-06-07";
-                    dateOut = "2019-06-13";
-                    numRooms = 1;
-                    numAdults = 2;
-                    numChildren = 1;
-                    city = "Edmonton";
-                    // ******************************************************************************
+                    int numRooms = numberPickerRoom.getValue();
+                    int numAdults = numberPickerAdults.getValue();
+                    int numChildren = numberPickerChildren.getValue();
+                    SimpleDateFormat ymdDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    String dateIn = ymdDateFormat.format(calIn.getTime());
+                    String dateOut = ymdDateFormat.format(calOut.getTime());
 
                     // update the values in SharedPreferences
                     editor.putString("DATE_IN", dateIn);
