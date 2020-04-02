@@ -37,11 +37,11 @@ public class MyRecyclerViewAdapterBookings extends
     public void onBindViewHolder(MyRecyclerViewAdapterBookings.ViewHolder holder, int position) {
         String[] listBookings = mData.get(position);
 
-        holder.hotelName.setText(position + listBookings[2]);
-        holder.hotelCity.setText(position + listBookings[3]);
-        holder.roomType.setText(position + listBookings[4]);
-        holder.dateCheckIn.setText(position + listBookings[5]);
-        holder.dateCheckOut.setText(position + listBookings[6]);
+        holder.hotelName.setText(listBookings[2]);
+        holder.hotelCity.setText(listBookings[3]);
+        holder.roomType.setText(listBookings[4]);
+        holder.dateCheckIn.setText(listBookings[5]);
+        holder.dateCheckOut.setText(listBookings[6]);
     }
 
     @Override
