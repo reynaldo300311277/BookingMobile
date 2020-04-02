@@ -40,6 +40,19 @@
     <string name="txtInfo3_10">EXPIRE DATE</string>
     <string name="txtInfo3_11">CVC</string>
     <string name="btnConfirmBooking">Confirm Booking</string>
+    <string name="txtInfo4_1">Booking - Confirmation</string>
+    <string name="txtInfo4_2">Hotel</string>
+    <string name="txtInfo4_3">City</string>
+    <string name="txtInfo4_4">Room Type</string>
+    <string name="txtInfo4_5">Date In</string>
+    <string name="txtInfo4_6">Date Out</string>
+    <string name="txtInfo4_7">Total Fee</string>
+    <string name="btnPersonalArea">Personal Area</string>
+    <string name="btnNewSearch">New Search</string>
+    <string name="txtInfo5_1">Personal Area</string>
+    <string name="txtInfo5_2">User Login</string>
+    <string name="txtInfo5_3">User Email</string>
+    <string name="txtInfo5_4">My Bookings</string>
     <string-array name="textDestinyCities">
         <item>Vancouver</item>
         <item>Victoria</item>

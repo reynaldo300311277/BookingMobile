@@ -9,6 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ActivityPersonalArea"></activity>
+        <activity android:name=".ActivityConfirmationView" />
         <activity android:name=".ActivityConfirmBooking" />
         <activity android:name=".ActivityFiltersByHotel" />
         <activity android:name=".ActivityRoomFilter" />

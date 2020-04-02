@@ -190,7 +190,7 @@ public class CBooking implements Parcelable
         this.credCardCVC = credCardCVC;
     }
 
-    public static CBooking addBooking (SQLiteDatabase db, int fkRoom, int fkUser,
+    public static boolean addBooking (SQLiteDatabase db, int fkRoom, int fkUser,
                  String dateCheckIn, String dateCheckOut, int numAdults, int numChildren,
                  String status, double totalFeePerNight, String credCardName, String credCardType,
                  String credCardNumber, String credCardExpire, String credCardCVC) {
@@ -202,63 +202,36 @@ public class CBooking implements Parcelable
             if (dateCheckIn.isEmpty() || dateCheckOut.isEmpty() || status.isEmpty() ||
                     credCardName.isEmpty() || credCardType.isEmpty() || credCardNumber.isEmpty() ||
                     credCardExpire.isEmpty() || credCardCVC.isEmpty())
-                return null;
+                return false;
 
             // check if these values are positives and less than the threshold
             if (fkUser< 0 || numAdults < 0 || numChildren < 0 || totalFeePerNight < 0 ||
                     fkUser > 1100 || numAdults > 4 || numChildren > 4)
-                return null;
+                return false;
 
             // check if the format of check-in/check-out/expire date is correct
             if (!isDateValid(dateCheckIn, "yyyy-MM-dd") &&
                     !isDateValid(dateCheckOut, "yyyy-MM-dd") &&
                     !isDateValid(credCardExpire, "yyyy-MM"))
-                return null;
+                return false;
 
             // check if check-in date is before the check-out
             if (dateCheckIn.compareTo(dateCheckOut) >= 0)
-                return null;
+                return false;
 
             // check if the credit card and cvc are numerics
             if (!isNumeric(credCardNumber) || !isNumeric(credCardCVC))
-                return null;
+                return false;
 
             // check if the type of credit card is VISA or MASTERCARD
             if (!(credCardType.toLowerCase().equals("visa") ||
                     credCardType.toLowerCase().equals("mastercard") ||
                     credCardType.toLowerCase().equals("american express")))
-                return null;
+                return false;
 
             // check if the card name is not empty
             if (credCardName.isEmpty())
-                return null;
-
-            // check if user exist
-            String queryUser = "SELECT pkUser " +
-                    "FROM User " +
-                    "WHERE pkUser = '" + fkUser + "'";
-
-            Cursor cursorUser = db.rawQuery(queryUser,null);
-
-            // user does not exist - returns and it is necessary to enter the user before
-            if (cursorUser.getCount() == 0) {
-                return null;
-            }
-
-            // check if fkUser is integer and exist
-            Cursor cursorRoom;
-
-            // check if room exist
-            String queryRoom = "SELECT pkRoom " +
-                    "FROM Room " +
-                    "WHERE pkRoom = '" + fkRoom + "'";
-
-            cursorRoom = db.rawQuery(queryRoom,null);
-
-            // room does not exist
-            if (cursorRoom.getCount() == 0) {
-                return null;
-            }
+                return false;
 
             // insert the booking no database
             String queryInsertBook = "INSERT INTO Booking(fkUser, dateCheckIn, dateCheckOut, " +
@@ -288,16 +261,16 @@ public class CBooking implements Parcelable
             Cursor cursorRelation = db.rawQuery(queryRelation, null);
             cursorRelation.moveToFirst();
             cursorRelation.close();
+            db.close();
         }
         // if any conversion failed throws the exception and return false
         catch (Exception e) {
             e.printStackTrace();
-            return null;
+            db.close();
+            return false;
         }
 
-        return new CBooking(lastPkBooking, fkUser, dateCheckIn, dateCheckOut, numAdults, numChildren,
-                status, totalFeePerNight, credCardName, credCardType, credCardNumber,
-                credCardExpire, credCardCVC);
+        return true;
     }
 
     private static boolean isNumeric(String str) {

@@ -22,13 +22,20 @@ public class ActivityConfirmBooking extends AppCompatActivity {
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
     private CHotel hotel;
+    private CRoom room;
 
-    private SQLiteDatabase mDatabase;
+    private EditText edtxtCardName;
+    private EditText edtxtCardNumber;
+    private EditText edtxtCardExpireDate;
+    private EditText edtxtCardCVC;
 
-    EditText edtxtCardName;
-    EditText edtxtCardNumber;
-    EditText edtxtCardExpireDate;
-    EditText edtxtCardCVC;
+    private String dateIn;
+    private String dateOut;
+    private int numRooms;
+    private int numAdults;
+    private int numChildren;
+    private int roomSelected;
+    private int totalDays;
 
     float pricePerNight;
 
@@ -44,20 +51,18 @@ public class ActivityConfirmBooking extends AppCompatActivity {
         final CSQLiteHelper dbHelper = new CSQLiteHelper((getApplicationContext()));
         dbHelper.createDatabaseConnection();
 
-        mDatabase = CSQLiteHelper.getConnection();
-
-        final String dateIn = sharedPref.getString("DATE_IN", "2019-06-07");
-        final String dateOut = sharedPref.getString("DATE_OUT", "2019-06-10");
-        final int numRooms = sharedPref.getInt("NUM_ROOMS", 1);
-        final int numAdults = sharedPref.getInt("NUM_ADULTS", 2);
-        final int numChildren = sharedPref.getInt("NUM_CHILDREN", 1);
-        int roomSelected = sharedPref.getInt("ROOM_SELECTED", 0);
-        int totalDays = 0;
+        dateIn = sharedPref.getString("DATE_IN", "2019-06-07");
+        dateOut = sharedPref.getString("DATE_OUT", "2019-06-10");
+        numRooms = sharedPref.getInt("NUM_ROOMS", 1);
+        numAdults = sharedPref.getInt("NUM_ADULTS", 2);
+        numChildren = sharedPref.getInt("NUM_CHILDREN", 1);
+        roomSelected = sharedPref.getInt("ROOM_SELECTED", 0);
+        totalDays = 0;
 
         Intent intent = getIntent();
         this.hotel = intent.getParcelableExtra("CHOTEL");
 
-        CRoom room = hotel.getArrayRooms().get(roomSelected);
+        room = hotel.getArrayRooms().get(roomSelected);
 
         TextView txtConfirmHotel = findViewById(R.id.txtConfirmHotel);
         TextView txtConfirmCity = findViewById(R.id.txtConfirmCity);
@@ -117,8 +122,13 @@ public class ActivityConfirmBooking extends AppCompatActivity {
                     Date dExpireDate = sdfMy.parse(cardExpireDate);
                     SimpleDateFormat sdfyM = new SimpleDateFormat("MM/yyyy");
                     cardExpireDate = sdfyM.format(dExpireDate);
-                } catch (ParseException ex) {
                 }
+                catch (ParseException ex) {
+                }
+
+                // ***************************************************************************
+                // colocar outras validações => nome, cartão, data e CVC!!!!
+                // ***************************************************************************
 
                 String cardType = "";
 
@@ -132,32 +142,53 @@ public class ActivityConfirmBooking extends AppCompatActivity {
                     cardType = "American Express";
 
 
-                // ********************************************************
-                // user is set to '1' because we do not have authentication
-                // ********************************************************
+                // ****************************************************************************
+                // user is set to '1' because we do not have authentication - VER MAIN ACTIVITY
+                // ****************************************************************************
+                int user_id = sharedPref.getInt("USER_ID", -1);
+                String user_name = sharedPref.getString("USER_NAME", "");
+                String hash_password = sharedPref.getString("HASH_PASSWORD", "");
+
+                // *************************************
+                // aqui vem o método de autenticação!!!!
+                // *************************************
                 boolean authentication = true;
 
-                if (authentication) {
+                if (authentication)
+                {
+                    boolean newBooking = CBooking.addBooking(dbHelper.getWritableDatabase(),
+                            room.getPkRoom(), user_id, dateIn, dateOut, numAdults, numChildren,
+                            "1",  pricePerNight, cardName, cardType, cardNumber,
+                            cardExpireDate, cardCVC);
 
-                    CBooking newBooking = CBooking.addBooking(dbHelper.getWritableDatabase(),
-                            numRooms, 1, dateIn, dateOut, numAdults, numChildren, "1",
-                            pricePerNight, cardName, cardType, cardNumber, cardExpireDate, cardCVC);
+                    if (newBooking)
+                    {
+                        editor.putString("DATE_IN", dateIn);
+                        editor.putString("DATE_OUT", dateOut);
+                        editor.putInt("NUM_ROOMS", numRooms);
+                        editor.putInt("NUM_ADULTS", numAdults);
+                        editor.putInt("NUM_CHILDREN", numChildren);
+                        editor.putString("CARD_NAME", cardName);
+                        editor.putString("CARD_TYPE", cardType);
+                        editor.putString("CARD_NUMBER", cardNumber);
+                        editor.putString("CARD_EXPIRE_DATE", cardExpireDate);
+                        editor.putString("CARD_CVC", cardCVC);
+                        editor.putString("HOTEL_NAME", hotel.getName());
+                        editor.putString("HOTEL_CITY", hotel.getCity());
+                        editor.putString("ROOM_TYPE", room.getType());
+                        editor.putFloat("TOTAL_PRICE", finalPrice);
+                        editor.putInt("TOTAL_DAYS", totalDays);
+                        editor.apply();
 
-                    /*
-                    CBooking newBooking = CBooking.addBooking(mDatabase,
-                            1,1,"2020-03-03","2020-03-08",
-                            3,0,"1",255.0,
-                            "John Paul Felipe III","MasterCard",
-                            "1234567890123456","2025-12",
-                            "987");
-                    */
-
-                    if (newBooking != null)
-                        Toast.makeText(ActivityConfirmBooking.this, "Booking Confirmed",
+                        Intent intent = new Intent(ActivityConfirmBooking.this,
+                                ActivityConfirmationView.class);
+                        startActivity(intent);
+                    }
+                    else {
+                        Toast.makeText(ActivityConfirmBooking.this,
+                                "Sorry, a problem happened",
                                 Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(ActivityConfirmBooking.this, "Sorry, a problem happened",
-                                Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else
                 {

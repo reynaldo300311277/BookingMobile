@@ -154,12 +154,28 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         editor = sharedPref.edit();
 
         // initialize the SharedPreferences with default value;
+
+        // tem que colocar a verificação se existe pois senão vai dar pau => quando volta do final da reserva pode dar pau...
+        // ******************************************************************************************************************
+        editor.putInt("USER_ID", 1);                            // mudar este valor para -1 quando tivermos a autenticação pronta
+        editor.putString("USER_NAME", "rhardson0");             // mudar este valor para "" quando tivermos autenticação pronta
+        editor.putString("HASH_PASSWORD", "73872041");          // mudar este valor para "" quando tivermos autenticação pronta
         editor.putInt("ROOM_SELECTED", -1);
-        editor.putString("DATE_IN", "2019-06-07");
-        editor.putString("DATE_OUT", "2019-06-10");
+        editor.putString("HOTEL_NAME", "");
+        editor.putString("HOTEL_CITY", "");
+        editor.putString("ROOM_TYPE", "");
+        editor.putString("DATE_IN", "");
+        editor.putString("DATE_OUT", "");
+        editor.putInt("TOTAL_DAYS", -1);
+        editor.putFloat("TOTAL_PRICE", 0);
         editor.putInt("NUM_ROOMS", 1);
         editor.putInt("NUM_ADULTS", 2);
         editor.putInt("NUM_CHILDREN", 1);
+        editor.putString("CARD_NAME", "");
+        editor.putString("CARD_TYPE", "");
+        editor.putString("CARD_NUMBER", "");
+        editor.putString("CARD_EXPIRE_DATE", "");
+        editor.putString("CARD_CVC", "");
         editor.commit();
 
         Button btnSearch = findViewById(R.id.btnSearch);
@@ -185,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                     // ******************************************************************************
                     // fake values to run => this code must be deleted when the above lines are ok!!!
                     dateIn = "2019-06-07";
-                    dateOut = "2019-06-10";
+                    dateOut = "2019-06-13";
                     numRooms = 1;
                     numAdults = 2;
                     numChildren = 1;
