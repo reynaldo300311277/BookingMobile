@@ -229,10 +229,6 @@ public class CBooking implements Parcelable
                     credCardType.toLowerCase().equals("american express")))
                 return false;
 
-            // check if the card name is not empty
-            if (credCardName.isEmpty())
-                return false;
-
             // insert the booking no database
             String queryInsertBook = "INSERT INTO Booking(fkUser, dateCheckIn, dateCheckOut, " +
                         "numAdults, numChildren, status, totalFeePerNight, credCardName, " +

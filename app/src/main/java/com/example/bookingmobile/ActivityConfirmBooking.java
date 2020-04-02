@@ -116,87 +116,181 @@ public class ActivityConfirmBooking extends AppCompatActivity {
                 String cardExpireDate = edtxtCardExpireDate.getText().toString();
                 String cardCVC = edtxtCardCVC.getText().toString();
 
-                SimpleDateFormat sdfMy = new SimpleDateFormat("MM/yy");
-
-                try {
-                    Date dExpireDate = sdfMy.parse(cardExpireDate);
-                    SimpleDateFormat sdfyM = new SimpleDateFormat("MM/yyyy");
-                    cardExpireDate = sdfyM.format(dExpireDate);
-                }
-                catch (ParseException ex) {
-                }
-
-                // ***************************************************************************
-                // colocar outras validações => nome, cartão, data e CVC!!!!
-                // ***************************************************************************
-
-                String cardType = "";
-
-                if (cardNumber.startsWith("4"))
-                    cardType = "Visa";
-                else if (cardNumber.startsWith("51") || cardNumber.startsWith("52") ||
-                        cardNumber.startsWith("53") || cardNumber.startsWith("54") ||
-                        cardNumber.startsWith("55"))
-                    cardType = "MasterCard";
-                else if (cardNumber.startsWith("34") || cardNumber.startsWith("37"))
-                    cardType = "American Express";
-
-
-                // ****************************************************************************
-                // user is set to '1' because we do not have authentication - VER MAIN ACTIVITY
-                // ****************************************************************************
-                int user_id = sharedPref.getInt("USER_ID", -1);
-                String user_name = sharedPref.getString("USER_NAME", "");
-                String hash_password = sharedPref.getString("HASH_PASSWORD", "");
-
-                // *************************************
-                // aqui vem o método de autenticação!!!!
-                // *************************************
-                boolean authentication = true;
-
-                if (authentication)
+                // check if these values were filled
+                if (dateIn.isEmpty() || dateOut.isEmpty() || cardName.isEmpty() ||
+                        cardNumber.isEmpty() || cardExpireDate.isEmpty() || cardCVC.isEmpty())
                 {
-                    boolean newBooking = CBooking.addBooking(dbHelper.getWritableDatabase(),
-                            room.getPkRoom(), user_id, dateIn, dateOut, numAdults, numChildren,
-                            "1",  pricePerNight, cardName, cardType, cardNumber,
-                            cardExpireDate, cardCVC);
-
-                    if (newBooking)
-                    {
-                        editor.putString("DATE_IN", dateIn);
-                        editor.putString("DATE_OUT", dateOut);
-                        editor.putInt("NUM_ROOMS", numRooms);
-                        editor.putInt("NUM_ADULTS", numAdults);
-                        editor.putInt("NUM_CHILDREN", numChildren);
-                        editor.putString("CARD_NAME", cardName);
-                        editor.putString("CARD_TYPE", cardType);
-                        editor.putString("CARD_NUMBER", cardNumber);
-                        editor.putString("CARD_EXPIRE_DATE", cardExpireDate);
-                        editor.putString("CARD_CVC", cardCVC);
-                        editor.putString("HOTEL_NAME", hotel.getName());
-                        editor.putString("HOTEL_CITY", hotel.getCity());
-                        editor.putString("ROOM_TYPE", room.getType());
-                        editor.putFloat("TOTAL_PRICE", finalPrice);
-                        editor.putInt("TOTAL_DAYS", totalDays);
-                        editor.apply();
-
-                        Intent intent = new Intent(ActivityConfirmBooking.this,
-                                ActivityConfirmationView.class);
-                        startActivity(intent);
-                    }
-                    else {
-                        Toast.makeText(ActivityConfirmBooking.this,
-                                "Sorry, a problem happened",
-                                Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(ActivityConfirmBooking.this,
+                            "Plase, fill the required information",
+                            Toast.LENGTH_SHORT).show();
+                }
+                // check if these values are positives and less than the threshold
+                else if (numAdults < 0 || numChildren < 0 || pricePerNight < 0 ||
+                        numAdults > 4 || numChildren > 4)
+                {
+                    Toast.makeText(ActivityConfirmBooking.this,
+                            "Information invalid, please review booking information",
+                            Toast.LENGTH_SHORT).show();
+                }
+                // check if the format of check-in/check-out dates are corrects
+                else if (!isDateValid(dateIn, "yyyy-MM-dd") ||
+                        !isDateValid(dateOut, "yyyy-MM-dd"))
+                {
+                    Toast.makeText(ActivityConfirmBooking.this,
+                            "Date Format invalid or inexistent",
+                            Toast.LENGTH_SHORT).show();
+                }
+                // check if the format of expire date is correct
+                else if (!isDateValid(cardExpireDate, "MM/yy"))
+                {
+                    Toast.makeText(ActivityConfirmBooking.this,
+                            "Expire Date Format invalid",
+                            Toast.LENGTH_SHORT).show();
+                }
+                // check if check-in date is before the check-out
+                else if (dateIn.compareTo(dateOut) >= 0)
+                {
+                    Toast.makeText(ActivityConfirmBooking.this,
+                            "Checkout date must be after than checkin",
+                            Toast.LENGTH_SHORT).show();
+                }
+                // check if the credit card and cvc are numerics
+                else if (!isNumeric(cardNumber) || !isNumeric(cardCVC))
+                {
+                    Toast.makeText(ActivityConfirmBooking.this,
+                            "Invalid numeric information",
+                            Toast.LENGTH_SHORT).show();
+                }
+                // check if the credicard number has 16 digits
+                else if (cardNumber.length() != 16)
+                {
+                    Toast.makeText(ActivityConfirmBooking.this,
+                            "Credit Card Number incomplete",
+                            Toast.LENGTH_SHORT).show();
+                }
+                // check if the credicard CVC has 3  digits
+                else if (cardCVC.length() != 3)
+                {
+                    Toast.makeText(ActivityConfirmBooking.this,
+                            "Credit Card CVC incomplete",
+                            Toast.LENGTH_SHORT).show();
+                }
+                // check if the type of credit card is VISA, MASTERCARD or AMERICAN EXPRESS
+                else if (!(cardNumber.startsWith("4") || cardNumber.startsWith("51") ||
+                        cardNumber.startsWith("52") ||  cardNumber.startsWith("53") ||
+                        cardNumber.startsWith("54") ||  cardNumber.startsWith("55") ||
+                        cardNumber.startsWith("34") || cardNumber.startsWith("37")))
+                {
+                    Toast.makeText(ActivityConfirmBooking.this,
+                            "Credit Card Number invalid",
+                            Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    // call the authentication form and pass the values to include the booking there
-                    // that is why I decide to check the authentication here, because all values
-                    // were validated, excepted the user
+                    String cardType = "";
+
+                    if (cardNumber.startsWith("4"))
+                        cardType = "Visa";
+                    else if (cardNumber.startsWith("51") || cardNumber.startsWith("52") ||
+                            cardNumber.startsWith("53") || cardNumber.startsWith("54") ||
+                            cardNumber.startsWith("55"))
+                        cardType = "MasterCard";
+                    else if (cardNumber.startsWith("34") || cardNumber.startsWith("37"))
+                        cardType = "American Express";
+
+                    SimpleDateFormat sdfMy = new SimpleDateFormat("MM/yy");
+
+                    try {
+                        Date dExpireDate = sdfMy.parse(cardExpireDate);
+                        SimpleDateFormat sdfyM = new SimpleDateFormat("MM/yyyy");
+                        cardExpireDate = sdfyM.format(dExpireDate);
+                    }
+                    catch (ParseException ex) {
+                    }
+
+                    // ****************************************************************************
+                    // user is set to '1' because we do not have authentication - VER MAIN ACTIVITY
+                    // ****************************************************************************
+                    int user_id = sharedPref.getInt("USER_ID", -1);
+                    String user_name = sharedPref.getString("USER_NAME", "");
+                    String hash_password = sharedPref.getString("HASH_PASSWORD", "");
+
+                    // *************************************
+                    // aqui vem o método de autenticação!!!!
+                    // *************************************
+                    boolean authentication = true;
+
+                    if (authentication)
+                    {
+                        boolean newBooking = CBooking.addBooking(dbHelper.getWritableDatabase(),
+                                room.getPkRoom(), user_id, dateIn, dateOut, numAdults, numChildren,
+                                "1",  pricePerNight, cardName, cardType, cardNumber,
+                                cardExpireDate, cardCVC);
+
+                        if (newBooking)
+                        {
+                            editor.putString("DATE_IN", dateIn);
+                            editor.putString("DATE_OUT", dateOut);
+                            editor.putInt("NUM_ROOMS", numRooms);
+                            editor.putInt("NUM_ADULTS", numAdults);
+                            editor.putInt("NUM_CHILDREN", numChildren);
+                            editor.putString("CARD_NAME", cardName);
+                            editor.putString("CARD_TYPE", cardType);
+                            editor.putString("CARD_NUMBER", cardNumber);
+                            editor.putString("CARD_EXPIRE_DATE", cardExpireDate);
+                            editor.putString("CARD_CVC", cardCVC);
+                            editor.putString("HOTEL_NAME", hotel.getName());
+                            editor.putString("HOTEL_CITY", hotel.getCity());
+                            editor.putString("ROOM_TYPE", room.getType());
+                            editor.putFloat("TOTAL_PRICE", finalPrice);
+                            editor.putInt("TOTAL_DAYS", totalDays);
+                            editor.apply();
+
+                            Intent intent = new Intent(ActivityConfirmBooking.this,
+                                    ActivityConfirmationView.class);
+                            startActivity(intent);
+                        }
+                        else {
+                            Toast.makeText(ActivityConfirmBooking.this,
+                                    "Sorry, a problem happened",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else
+                    {
+                        // call the authentication form and pass the values to include the booking there
+                        // that is why I decide to check the authentication here, because all values
+                        // were validated, excepted the user
+                    }
                 }
             }
         });
+    }
+
+    private static boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        }
+        catch (NumberFormatException ex){
+            return false;
+        }
+    }
+
+    private static boolean isDateValid(String dateToValidate, String dateFromat){
+
+        if(dateToValidate == null) { return false;  }
+
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFromat);
+        sdf.setLenient(false);
+
+        try { // if not valid, it will throw ParseException
+            Date date = sdf.parse(dateToValidate);
+        }
+        catch (ParseException e) {
+            return false;
+        }
+
+        return true;
     }
 }
