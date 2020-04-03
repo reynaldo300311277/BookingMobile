@@ -74,11 +74,11 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         numberPickerRoom.setMaxValue(4);
         numberPickerRoom.setWrapSelectorWheel(false);
 
-        numberPickerAdults.setMinValue(1);
+        numberPickerAdults.setMinValue(0);
         numberPickerAdults.setMaxValue(4);
         numberPickerAdults.setWrapSelectorWheel(false);
 
-        numberPickerChildren.setMinValue(1);
+        numberPickerChildren.setMinValue(0);
         numberPickerChildren.setMaxValue(4);
         numberPickerChildren.setWrapSelectorWheel(false);
 
@@ -140,7 +140,8 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 calTest.set(year,month,dayOfMonth);
 
                 if ( calToday.compareTo(calTest) == 1 ) {
-                    Toast.makeText(MainActivity.this,"Booking cannot be in the past", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this,"Booking cannot be in the past",
+                            Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -167,7 +168,8 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 calTest.set(Calendar.MILLISECOND, 0);
 
                 if ( calIn.compareTo(calTest) != -1 ) {
-                    Toast.makeText(MainActivity.this,"Booking end date must be after start date", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this,
+                            "Booking end date must be after start date", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -211,70 +213,79 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    String city = spinnerDestinyCities.getSelectedItem().toString();
-                    int numRooms = numberPickerRoom.getValue();
-                    int numAdults = numberPickerAdults.getValue();
-                    int numChildren = numberPickerChildren.getValue();
-                    SimpleDateFormat ymdDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    String dateIn = ymdDateFormat.format(calIn.getTime());
-                    String dateOut = ymdDateFormat.format(calOut.getTime());
 
-                    // update the values in SharedPreferences
-                    editor.putString("DATE_IN", dateIn);
-                    editor.putString("DATE_OUT", dateOut);
-                    editor.putInt("NUM_ROOMS", numRooms);
-                    editor.putInt("NUM_ADULTS", numAdults);
-                    editor.putInt("NUM_CHILDREN", numChildren);
-                    editor.apply();
+                String city = spinnerDestinyCities.getSelectedItem().toString();
+                int numRooms = numberPickerRoom.getValue();
+                int numAdults = numberPickerAdults.getValue();
+                int numChildren = numberPickerChildren.getValue();
+                SimpleDateFormat ymdDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String dateIn = ymdDateFormat.format(calIn.getTime());
+                String dateOut = ymdDateFormat.format(calOut.getTime());
 
-                    boolean hasParking = true;
-                    boolean hasDoubleBed = true;
-                    boolean hasFreeWifi = true;
-                    boolean isSmokingFree = true;
-                    boolean isPetFriendly = true;
-                    boolean hasGym = true;
-                    boolean hasSwimmingPool = true;
-                    boolean hasSauna = true;
+                if ((numAdults + numChildren) > 0)
+                {
+                    try {
+                        // update the values in SharedPreferences
+                        editor.putString("DATE_IN", dateIn);
+                        editor.putString("DATE_OUT", dateOut);
+                        editor.putInt("NUM_ROOMS", numRooms);
+                        editor.putInt("NUM_ADULTS", numAdults);
+                        editor.putInt("NUM_CHILDREN", numChildren);
+                        editor.apply();
 
-                    // Create a CHotelsFromCity and set the filters
-                    CHotelsFromCity hotelsFromCity = new CHotelsFromCity(dbHelper.getReadableDatabase());
-                    String test = hotelsFromCity.setFiltersHotels(hasParking,hasDoubleBed, hasFreeWifi,
-                            isSmokingFree, isPetFriendly, hasGym, hasSwimmingPool, hasSauna);
+                        boolean hasParking = true;
+                        boolean hasDoubleBed = true;
+                        boolean hasFreeWifi = true;
+                        boolean isSmokingFree = true;
+                        boolean isPetFriendly = true;
+                        boolean hasGym = true;
+                        boolean hasSwimmingPool = true;
+                        boolean hasSauna = true;
 
-                    // Get the hotels
-                    ArrayList<CHotel> arrayListHotels = hotelsFromCity.getHotelsFromCity(city,
-                            dateIn, dateOut, numRooms,numAdults, numChildren);
+                        // Create a CHotelsFromCity and set the filters
+                        CHotelsFromCity hotelsFromCity = new CHotelsFromCity(dbHelper.getReadableDatabase());
+                        String test = hotelsFromCity.setFiltersHotels(hasParking,hasDoubleBed, hasFreeWifi,
+                                isSmokingFree, isPetFriendly, hasGym, hasSwimmingPool, hasSauna);
 
-                    ArrayList<String[]> hotelInfoDisplay = new ArrayList<>();
+                        // Get the hotels
+                        ArrayList<CHotel> arrayListHotels = hotelsFromCity.getHotelsFromCity(city,
+                                dateIn, dateOut, numRooms,numAdults, numChildren);
 
-                    for (int i=0; i<arrayListHotels.size(); i++)
-                    {
-                        CHotel hotel = arrayListHotels.get(i);
-                        String nameHotel = hotel.getName();
+                        ArrayList<String[]> hotelInfoDisplay = new ArrayList<>();
 
-                        ArrayList<CRoom> rooms = hotel.getArrayRooms();
-                        float minPriceHotel = 100000;
+                        for (int i=0; i<arrayListHotels.size(); i++)
+                        {
+                            CHotel hotel = arrayListHotels.get(i);
+                            String nameHotel = hotel.getName();
 
-                        for (int j=0; j< rooms.size(); j++)
-                            if (minPriceHotel > rooms.get(j).getPrice())
-                                minPriceHotel = rooms.get(j).getPrice();
+                            ArrayList<CRoom> rooms = hotel.getArrayRooms();
+                            float minPriceHotel = 100000;
 
-                        String[] val = new String[] {nameHotel, Float.toString(minPriceHotel)};
-                        hotelInfoDisplay.add(val);
+                            for (int j=0; j< rooms.size(); j++)
+                                if (minPriceHotel > rooms.get(j).getPrice())
+                                    minPriceHotel = rooms.get(j).getPrice();
+
+                            String[] val = new String[] {nameHotel, Float.toString(minPriceHotel)};
+                            hotelInfoDisplay.add(val);
+                        }
+
+                        // set up the RecyclerView
+                        RecyclerView recyclerView = findViewById(R.id.recyclerViewHotels);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+
+                        // tenho que passar o vetor com os hoteis e também o próprio objeto
+                        adapterHotels = new MyRecyclerViewAdapterHotels(MainActivity.this,
+                                hotelInfoDisplay, arrayListHotels);
+                        adapterHotels.setClickListener(MainActivity.this);
+                        recyclerView.setAdapter(adapterHotels);
                     }
-
-                    // set up the RecyclerView
-                    RecyclerView recyclerView = findViewById(R.id.recyclerViewHotels);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-
-                    // tenho que passar o vetor com os hoteis e também o próprio objeto
-                    adapterHotels = new MyRecyclerViewAdapterHotels(MainActivity.this,
-                            hotelInfoDisplay, arrayListHotels);
-                    adapterHotels.setClickListener(MainActivity.this);
-                    recyclerView.setAdapter(adapterHotels);
+                    catch (Exception ex) {
+                    }
                 }
-                catch (Exception ex) {
+                else
+                {
+                    Toast.makeText(MainActivity.this,
+                            "No Guest Information", Toast.LENGTH_SHORT).show();
                 }
             }
         });
