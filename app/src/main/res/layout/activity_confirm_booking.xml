@@ -10,11 +10,12 @@
         android:id="@+id/txtInfo3_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="16dp"
         android:text="@string/txtInfo3_1"
         android:textAllCaps="false"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.552"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -217,9 +218,9 @@
         android:id="@+id/txtInfo3_10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="22dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="44dp"
         android:text="@string/txtInfo3_10"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -227,16 +228,15 @@
 
     <TextView
         android:id="@+id/txtInfo3_11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_width="26dp"
+        android:layout_height="23dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
         android:gravity="center|center_vertical"
         android:text="@string/txtInfo3_11"
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/edtxtCardCVC"
-        app:layout_constraintTop_toBottomOf="@+id/edtxtCardNumber" />
+        app:layout_constraintTop_toTopOf="@+id/txtInfo3_10" />
 
     <EditText
         android:id="@+id/edtxtCardName"
@@ -269,37 +269,39 @@
         android:imeOptions="actionDone"
         android:inputType="number"
         android:maxLength="16"
-        android:nextFocusDown="@id/edtxtExpireDate"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edtxtCardName" />
 
-    <EditText
-        android:id="@+id/edtxtExpireDate"
-        android:layout_width="110dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
-        android:layout_marginLeft="22dp"
-        android:layout_marginTop="5dp"
-        android:ems="10"
-        android:gravity="center|center_vertical"
-        android:imeOptions="actionDone"
-        android:inputType="date"
-        android:maxLength="5"
-        android:nextFocusDown="@id/edtxtCardCVC"
-        android:textSize="14sp"
-        android:textStyle="bold"
+    <NumberPicker
+        android:id="@+id/numberPickerMonthCC"
+        android:layout_width="73dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/txtInfo3_10"
-        app:layout_constraintTop_toBottomOf="@+id/edtxtCardNumber" />
+        app:layout_constraintTop_toTopOf="@+id/numberPickerYearCC" />
+
+    <NumberPicker
+        android:id="@+id/numberPickerYearCC"
+        android:layout_width="40dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="28dp"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/numberPickerMonthCC"
+        app:layout_constraintTop_toBottomOf="@+id/txtInfo3_9" />
 
     <EditText
         android:id="@+id/edtxtCardCVC"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginRight="28dp"
         android:ems="10"
         android:gravity="center|center_vertical"
         android:imeOptions="actionDone"
@@ -308,18 +310,19 @@
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtxtCardNumber" />
+        app:layout_constraintTop_toBottomOf="@+id/txtInfo3_9" />
 
     <Button
         android:id="@+id/btnConfirmBooking"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="32dp"
         android:text="@string/btnConfirmBooking"
         android:textAllCaps="false"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.577"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtxtExpireDate" />
+        app:layout_constraintTop_toBottomOf="@+id/edtxtCardCVC" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

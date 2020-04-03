@@ -5,12 +5,15 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -44,7 +47,7 @@ public class ActivityPersonalArea extends AppCompatActivity
                         "INNER JOIN Booking_Room AS br ON b.pkBooking = br.fkBooking " +
                         "INNER JOIN Room AS r ON br.fkRoom = r.pkRoom " +
                         "INNER JOIN Hotel AS h ON r.fkHotel = h.pkHotel " +
-                        "WHERE u.pkUser = " + user_id + ";";
+                        "WHERE u.pkUser = " + user_id + " ORDER BY  b.dateCheckIn DESC";
 
             cursor = mDatabase.rawQuery(query,null);
             int total = cursor.getCount();
@@ -91,10 +94,24 @@ public class ActivityPersonalArea extends AppCompatActivity
         }
         catch (Exception e)
         {
+            Toast.makeText(ActivityPersonalArea.this,
+                    "Sorry, a critical problem happened when accessing the DB",
+                    Toast.LENGTH_SHORT).show();
         }
+
+        final Button btnNewSearch = (Button) findViewById(R.id.btnPersonalNewSearch);
+        btnNewSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ActivityPersonalArea.this,
+                        MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     public void onItemClick(View view, int position) {
-    }
+
+    };
 }
