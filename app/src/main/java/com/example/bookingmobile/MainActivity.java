@@ -146,8 +146,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 }
 
                 calIn.set(year,month,dayOfMonth);
-//                SimpleDateFormat monthDateFormat = new SimpleDateFormat("MMM");
-//                String strDate = monthDateFormat.format(calIn.getTime()) + "/" + dayOfMonth + "/" + year;
 
                 SimpleDateFormat monthDateFormat = new SimpleDateFormat("MMM/dd/yyyy");
                 String strDate = monthDateFormat.format(calIn.getTime());
@@ -174,8 +172,10 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 }
 
                 calOut.set(year,month,dayOfMonth);
-                SimpleDateFormat monthDateFormat = new SimpleDateFormat("MMM");
-                String strDate = monthDateFormat.format(calOut.getTime()) + "/" + dayOfMonth + "/" + year;
+
+                SimpleDateFormat monthDateFormat = new SimpleDateFormat("MMM/dd/yyyy");
+                String strDate = monthDateFormat.format(calOut.getTime());
+
                 textViewDateOut.setText(strDate);
             }
         };

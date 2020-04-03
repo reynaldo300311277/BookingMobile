@@ -37,7 +37,7 @@ public class MyRecyclerViewAdapterBookings extends
     public void onBindViewHolder(MyRecyclerViewAdapterBookings.ViewHolder holder, int position) {
         String[] listBookings = mData.get(position);
 
-        holder.hotelName.setText(listBookings[2]);
+        holder.hotelName.setText((position + 1) + " " + listBookings[2]);
         holder.hotelCity.setText(listBookings[3]);
         holder.roomType.setText(listBookings[4]);
         holder.dateCheckIn.setText(listBookings[5]);

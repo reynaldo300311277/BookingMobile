@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -46,7 +47,7 @@ public class ActivityPersonalArea extends AppCompatActivity
                         "INNER JOIN Booking_Room AS br ON b.pkBooking = br.fkBooking " +
                         "INNER JOIN Room AS r ON br.fkRoom = r.pkRoom " +
                         "INNER JOIN Hotel AS h ON r.fkHotel = h.pkHotel " +
-                        "WHERE u.pkUser = " + user_id + ";";
+                        "WHERE u.pkUser = " + user_id + " ORDER BY  b.dateCheckIn DESC";
 
             cursor = mDatabase.rawQuery(query,null);
             int total = cursor.getCount();
@@ -93,10 +94,13 @@ public class ActivityPersonalArea extends AppCompatActivity
         }
         catch (Exception e)
         {
+            Toast.makeText(ActivityPersonalArea.this,
+                    "Sorry, a critical problem happened when accessing the DB",
+                    Toast.LENGTH_SHORT).show();
         }
 
-        Button btnPersonalNewSearch = findViewById(R.id.btnPersonalNewSearch);
-        btnPersonalNewSearch.setOnClickListener(new View.OnClickListener() {
+        final Button btnNewSearch = (Button) findViewById(R.id.btnPersonalNewSearch);
+        btnNewSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ActivityPersonalArea.this,
@@ -108,5 +112,6 @@ public class ActivityPersonalArea extends AppCompatActivity
 
     @Override
     public void onItemClick(View view, int position) {
-    }
+
+    };
 }
