@@ -75,7 +75,6 @@ public class ActivityConfirmBooking extends AppCompatActivity {
         numAdults = sharedPref.getInt("NUM_ADULTS", 2);
         numChildren = sharedPref.getInt("NUM_CHILDREN", 1);
         roomSelected = sharedPref.getInt("ROOM_SELECTED", 0);
-//        totalDays = 0;
 
         Log.w("BOOK", roomSelected + "");
 
@@ -178,7 +177,7 @@ public class ActivityConfirmBooking extends AppCompatActivity {
                 }
 
                 if (cardCVC.isEmpty() || cardCVC.length() != 3) {
-                    Toast.makeText(ActivityConfirmBooking.this,"CVC from tour Credit Card no informed", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ActivityConfirmBooking.this,"CV from tour Credit Card no informed", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -196,35 +195,41 @@ public class ActivityConfirmBooking extends AppCompatActivity {
                 // *************************************
                 boolean authentication = true;
 
-                if (authentication)
-                {
-                    boolean newBooking = CBooking.addBooking(dbHelper.getWritableDatabase(),
-                            room.getPkRoom(), user_id, dateIn, dateOut, numAdults, numChildren,
-                            "1",  pricePerNight, cardName, cardType, cardNumber,
-                            cardExpireDate, cardCVC);
-
-                    if (newBooking)
+                    if (authentication)
                     {
-                        editor.putString("DATE_IN", dateIn);
-                        editor.putString("DATE_OUT", dateOut);
-                        editor.putInt("NUM_ROOMS", numRooms);
-                        editor.putInt("NUM_ADULTS", numAdults);
-                        editor.putInt("NUM_CHILDREN", numChildren);
-                        editor.putString("CARD_NAME", cardName);
-                        editor.putString("CARD_TYPE", cardType);
-                        editor.putString("CARD_NUMBER", cardNumber);
-                        editor.putString("CARD_EXPIRE_DATE", cardExpireDate);
-                        editor.putString("CARD_CVC", cardCVC);
-                        editor.putString("HOTEL_NAME", hotel.getName());
-                        editor.putString("HOTEL_CITY", hotel.getCity());
-                        editor.putString("ROOM_TYPE", room.getType());
-                        editor.putFloat("TOTAL_PRICE", finalPrice);
-                        editor.putInt("TOTAL_DAYS", totalDays);
-                        editor.apply();
+                        boolean newBooking = CBooking.addBooking(dbHelper.getWritableDatabase(),
+                                room.getPkRoom(), user_id, dateIn, dateOut, numAdults, numChildren,
+                                "1",  pricePerNight, cardName, cardType, cardNumber,
+                                cardExpireDate, cardCVC);
 
-                        Intent intent = new Intent(ActivityConfirmBooking.this,
-                                ActivityConfirmationView.class);
-                        startActivity(intent);
+                        if (newBooking)
+                        {
+                            editor.putString("DATE_IN", dateIn);
+                            editor.putString("DATE_OUT", dateOut);
+                            editor.putInt("NUM_ROOMS", numRooms);
+                            editor.putInt("NUM_ADULTS", numAdults);
+                            editor.putInt("NUM_CHILDREN", numChildren);
+                            editor.putString("CARD_NAME", cardName);
+                            editor.putString("CARD_TYPE", cardType);
+                            editor.putString("CARD_NUMBER", cardNumber);
+                            editor.putString("CARD_EXPIRE_DATE", cardExpireDate);
+                            editor.putString("CARD_CVC", cardCVC);
+                            editor.putString("HOTEL_NAME", hotel.getName());
+                            editor.putString("HOTEL_CITY", hotel.getCity());
+                            editor.putString("ROOM_TYPE", room.getType());
+                            editor.putFloat("TOTAL_PRICE", finalPrice);
+                            editor.putInt("TOTAL_DAYS", totalDays);
+                            editor.apply();
+
+                            Intent intent = new Intent(ActivityConfirmBooking.this,
+                                    ActivityConfirmationView.class);
+                            startActivity(intent);
+                        }
+                        else {
+                            Toast.makeText(ActivityConfirmBooking.this,
+                                    "Sorry, a problem happened",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
                     else {
                         Toast.makeText(ActivityConfirmBooking.this,
@@ -232,13 +237,6 @@ public class ActivityConfirmBooking extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
-                else
-                {
-                    // call the authentication form and pass the values to include the booking there
-                    // that is why I decide to check the authentication here, because all values
-                    // were validated, excepted the user
-                }
-            }
-        });
+            });
     }
 }
