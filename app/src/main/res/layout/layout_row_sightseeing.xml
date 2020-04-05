@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp">
+
+    <TextView
+        android:id="@+id/txtSightseeing"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="0.75"
+        android:gravity="left|center_vertical"
+        android:text="TextView"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txtDistances"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_gravity="right|center_vertical"
+        android:layout_weight="0.1"
+        android:gravity="right|center_vertical"
+        android:text="TextView"
+        android:textSize="18sp" />
+</LinearLayout>

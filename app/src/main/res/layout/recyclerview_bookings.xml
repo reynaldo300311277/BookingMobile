@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="65dp"
+    android:layout_marginTop="0dp"
+    android:layout_marginBottom="0dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="24sp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtBookingHotelName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.7"
+            android:gravity="left|center_vertical"
+            android:text="TextView"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtBookingHotelCity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.3"
+            android:gravity="left|center_vertical"
+            android:text="TextView"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtBookingRoomType"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.4"
+            android:gravity="center_vertical"
+            android:text="TextView"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/txtBookingDateIn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_vertical"
+            android:layout_weight="0.3"
+            android:gravity="center_vertical"
+            android:text="TextView"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/txtBookingDateOut"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_vertical"
+            android:layout_weight="0.3"
+            android:gravity="center_vertical"
+            android:text="TextView"
+            android:textSize="15sp" />
+    </LinearLayout>
+</LinearLayout>

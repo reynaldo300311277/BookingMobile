@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">Booking Mobile</string>
+    <string name="textIn">In</string>
+    <string name="textOut">Out</string>
+    <string name="textRooms">Rooms</string>
+    <string name="textAdults">Adults</string>
+    <string name="textChildren">Children</string>
+    <string name="textBookingTitle">Booking</string>
+    <string name="textDestiny">Destiny</string>
+    <string name="txtInfo1">Check-In</string>
+    <string name="txtInfo2">Check-Out</string>
+    <string name="txtInfo3"># Rooms</string>
+    <string name="txtInfo4"># Adults</string>
+    <string name="txtInfo5"># Children</string>
+    <string name="txtInfo6">City</string>
+    <string name="txtInfo7">Hotel</string>
+    <string name="btnRoomFilter">Filter</string>
+    <string name="btnHotelFilter">Filter</string>
+    <string name="btnSearch">Search</string>
+    <string name="btnBook">Book</string>
+    <string name="txtFilterHotel1">Hotel Facilites</string>
+    <string name="chboxDoubleBed">Double Bed</string>
+    <string name="chboxFreeWifi">Free Wi-Fi</string>
+    <string name="chboxGym">Gym</string>
+    <string name="chboxParking">Parking</string>
+    <string name="chboxPetFriendly">Pet Friendly</string>
+    <string name="chboxSauna">Sauna</string>
+    <string name="chboxSmokingFree">Smoking Free</string>
+    <string name="chboxSwimmingPool">Swimming Pool</string>
+    <string name="btnConfirm">Confirm</string>
+    <string name="txtInfo3_1">Booking Details</string>
+    <string name="txtInfo3_2">Hotel</string>
+    <string name="txtInfo3_3">City</string>
+    <string name="txtInfo3_4">Room Type</string>
+    <string name="txtInfo3_5">In</string>
+    <string name="txtInfo3_6">Out</string>
+    <string name="txtInfo3_7">Payment Details</string>
+    <string name="txtInfo3_8">CARD NAME</string>
+    <string name="txtInfo3_9">CARD NUMBER</string>
+    <string name="txtInfo3_10">EXPIRE DATE</string>
+    <string name="txtInfo3_11">CVC</string>
+    <string name="btnConfirmBooking">Confirm Booking</string>
+    <string name="txtInfo4_1">Booking - Confirmation</string>
+    <string name="txtInfo4_2">Hotel</string>
+    <string name="txtInfo4_3">City</string>
+    <string name="txtInfo4_4">Room Type</string>
+    <string name="txtInfo4_5">Date In</string>
+    <string name="txtInfo4_6">Date Out</string>
+    <string name="txtInfo4_7">Total Fee</string>
+    <string name="btnPersonalArea">Personal Area</string>
+    <string name="btnNewSearch">New Search</string>
+    <string name="txtInfo5_1">Personal Area</string>
+    <string name="txtInfo5_2">User Login</string>
+    <string name="txtInfo5_3">User Email</string>
+    <string name="txtInfo5_4">My Bookings</string>
+    <string-array name="textDestinyCities">
+        <item>Vancouver</item>
+        <item>Victoria</item>
+        <item>Calgary</item>
+        <item>Edmonton</item>
+    </string-array>
+
+</resources>
