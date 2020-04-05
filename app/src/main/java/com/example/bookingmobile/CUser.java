@@ -111,21 +111,20 @@ public class CUser implements Parcelable
         dest.writeString(email);
     }
 
-    public static CUser addUser(SQLiteDatabase db, String loginName,
-                                String hashPassword, String email){
+    public static CUser addUser(SQLiteDatabase db, String loginName, String hashPassword, String email){
         SQLiteDatabase mDatabase = db;
 
         // check if user exist
         String queryUser = "SELECT loginName " +
                 "FROM User " +
                 "WHERE loginName = '" + loginName + "'";
-
         Cursor cursorUser;
         cursorUser = mDatabase.rawQuery(queryUser,null);
 
         if (cursorUser.getCount() > 0) {
             return null;
         }
+        cursorUser.close();
 
         // insert the booking on database
         ContentValues val = new ContentValues();
@@ -159,32 +158,39 @@ public class CUser implements Parcelable
         cursorNewUser.moveToFirst();
         int pkUser = cursorNewUser.getInt(cursorNewUser.getColumnIndex("pkUser"));
 
+        cursorNewUser.close();
         return new CUser(pkUser, loginName, hashPassword, email);
     }
 
-    public static boolean checkAuthentication(SQLiteDatabase db,  String loginName,
+//    public static boolean checkAuthentication(SQLiteDatabase db,  String loginName,
+      public static boolean checkAuthentication(SQLiteDatabase db,  String email,
                                        String hashPassword) {
         SQLiteDatabase mDatabase = db;
 
         String queryUser = "SELECT pkUser, loginName, hashPassword, email " +
                 "FROM User " +
-                "WHERE loginName LIKE '" + loginName + "' " +
+//              "WHERE loginName LIKE '" + loginName + "' " +
+                "WHERE email LIKE '" + email + "' " +
                 "AND hashPassword LIKE '" + hashPassword + "'";
 
         Cursor cursorUser = mDatabase.rawQuery(queryUser, null);
 
         if (cursorUser.getCount() == 0) { return false; }
 
+          cursorUser.close();
+
         return true;
     }
 
-    public static CUser getAllDataFromUser(SQLiteDatabase db,  String loginName,
+//    public static CUser getAllDataFromUser(SQLiteDatabase db,  String loginName,
+      public static CUser getAllDataFromUser(SQLiteDatabase db,  String email,
                                        String hashPassword) {
         SQLiteDatabase mDatabase = db;
 
         String queryUser = "SELECT pkUser, loginName, hashPassword, email " +
                 "FROM User " +
-                "WHERE loginName LIKE '" + loginName + "' " +
+//                "WHERE loginName LIKE '" + loginName + "' " +
+                "WHERE email LIKE '" + email + "' " +
                 "AND hashPassword LIKE '" + hashPassword + "'";
 
         Cursor cursorUser = mDatabase.rawQuery(queryUser, null);
@@ -196,9 +202,13 @@ public class CUser implements Parcelable
         cursorUser.moveToFirst();
 
         int pkUser = cursorUser.getInt(cursorUser.getColumnIndex("pkUser"));
-        String email = cursorUser.getString(cursorUser.getColumnIndex("email"));
+        //email = cursorUser.getString(cursorUser.getColumnIndex("email"));
+        String loginName = cursorUser.getString(cursorUser.getColumnIndex("loginName"));
 
-        // select all user paymento
+        // closing cursorUser
+          cursorUser.close();
+
+        // select all user payment
         Cursor cursorPayment;
         ArrayList<CPaymentInfo> paymentInfos = new ArrayList<>();
 
@@ -226,6 +236,8 @@ public class CUser implements Parcelable
                 paymentInfos.add(paymentInfo);
             }
         }
+        // closing cursorPayment
+        cursorPayment.close();
 
         // select all user's bookings (historic)
         Cursor cursorBooking;
@@ -249,7 +261,8 @@ public class CUser implements Parcelable
                 String dateCheckOut = cursorBooking.getString(cursorBooking.getColumnIndex("dateCheckOut"));
                 int numAdults = cursorBooking.getInt(cursorBooking.getColumnIndex("numAdults"));
                 int numChildren = cursorBooking.getInt(cursorBooking.getColumnIndex("numChildren"));
-                String status = cursorPayment.getString(cursorPayment.getColumnIndex("status"));
+//                String status = cursorPayment.getString(cursorPayment.getColumnIndex("status"));
+                String status = cursorBooking.getString(cursorPayment.getColumnIndex("status"));
                 float totalFeePerNight = cursorBooking.getFloat(cursorBooking.getColumnIndex("totalFeePerNight"));
                 String credCardName = cursorBooking.getString(cursorBooking.getColumnIndex("credCardName"));
                 String credCardType = cursorBooking.getString(cursorBooking.getColumnIndex("credCardType"));
@@ -264,6 +277,8 @@ public class CUser implements Parcelable
                 bookings.add(booking);
             }
         }
+        // closing cursorBooking
+          cursorBooking.close();
 
         return new CUser(pkUser, loginName, hashPassword, email, paymentInfos, bookings);
     }

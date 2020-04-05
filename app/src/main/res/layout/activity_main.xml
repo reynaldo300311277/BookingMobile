@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="15dp"
         android:text="@string/textIn"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -46,21 +46,22 @@
         android:id="@+id/textOut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
         android:text="@string/textOut"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/editTextDateOut"
-        app:layout_constraintTop_toTopOf="@+id/textIn" />
+        app:layout_constraintTop_toBottomOf="@+id/textBookingTitle" />
 
     <TextView
         android:id="@+id/editTextDateIn"
         android:layout_width="150dp"
         android:layout_height="33dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
         android:ems="10"
         android:gravity="left"
         android:textSize="21sp"
@@ -72,9 +73,9 @@
         android:id="@+id/editTextDateOut"
         android:layout_width="150dp"
         android:layout_height="33dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
         android:ems="10"
         android:textSize="21sp"
         android:textStyle="bold"
@@ -90,7 +91,7 @@
         android:layout_marginTop="18dp"
         android:textSize="30sp"
         app:layout_constraintStart_toEndOf="@+id/textRooms"
-        app:layout_constraintTop_toBottomOf="@+id/textIn" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextDateIn" />
 
     <NumberPicker
         android:id="@+id/numberPickerAdults"
@@ -98,9 +99,10 @@
         android:layout_height="60dp"
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
+        android:layout_marginTop="18dp"
         android:textSize="30sp"
         app:layout_constraintStart_toEndOf="@+id/textAdults"
-        app:layout_constraintTop_toTopOf="@+id/numberPickerRooms" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextDateIn" />
 
     <NumberPicker
         android:id="@+id/numberPickerChildren"
@@ -108,54 +110,61 @@
         android:layout_height="60dp"
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
+        android:layout_marginTop="16dp"
         android:textSize="30sp"
         app:layout_constraintStart_toEndOf="@+id/textChildren"
-        app:layout_constraintTop_toTopOf="@+id/numberPickerAdults" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextDateIn" />
 
     <TextView
         android:id="@+id/textRooms"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="36dp"
         android:text="@string/textRooms"
         android:textSize="15sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textIn"
-        app:layout_constraintTop_toTopOf="@+id/numberPickerRooms" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textIn" />
 
     <TextView
         android:id="@+id/textAdults"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="45dp"
-        android:layout_marginLeft="45dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="24dp"
         android:text="@string/textAdults"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/numberPickerRooms"
-        app:layout_constraintTop_toTopOf="@+id/textRooms" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextDateIn" />
 
     <TextView
         android:id="@+id/textChildren"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="45dp"
-        android:layout_marginLeft="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
         android:text="@string/textChildren"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/numberPickerAdults"
-        app:layout_constraintTop_toTopOf="@+id/textRooms" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextDateIn" />
 
     <TextView
         android:id="@+id/textViewDestiny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="18dp"
         android:text="@string/textDestiny"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textRooms"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/numberPickerRooms" />
 
     <Spinner
@@ -164,19 +173,19 @@
         android:layout_height="30dp"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="16dp"
         android:gravity="center|center_vertical"
         android:textSize="30sp"
         app:layout_constraintStart_toEndOf="@+id/textViewDestiny"
-        app:layout_constraintTop_toBottomOf="@+id/numberPickerRooms" />
+        app:layout_constraintTop_toBottomOf="@+id/numberPickerAdults" />
 
     <Button
         android:id="@+id/btnHotelFilter"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="265dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="264dp"
         android:text="@string/btnHotelFilter"
         android:textAllCaps="false"
         android:textSize="15sp"
@@ -188,9 +197,9 @@
         android:id="@+id/btnSearch"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_marginTop="265dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginTop="264dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
         android:text="@string/btnSearch"
         android:textAllCaps="false"
         android:textSize="15sp"
@@ -199,16 +208,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewHotels"
-        android:layout_width="400dp"
-        android:layout_height="260dp"
-        android:layout_marginTop="305dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="358dp"
+        android:layout_height="299dp"
+        android:layout_marginTop="330dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.064" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
