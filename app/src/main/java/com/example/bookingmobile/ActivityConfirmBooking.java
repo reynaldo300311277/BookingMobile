@@ -157,7 +157,7 @@ public class ActivityConfirmBooking extends AppCompatActivity {
 
                 Log.w("BOOK", cardExpireDate);
 
-                if (cardName.isEmpty() || ! Pattern.matches("[a-zA-Z]+",cardName) ) {
+                if (cardName.isEmpty() || ! Pattern.matches("[a-zA-Z\\h]+",cardName) ) {
                     Toast.makeText(ActivityConfirmBooking.this,"Inform a Valid Name from your Credit Card", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -172,27 +172,21 @@ public class ActivityConfirmBooking extends AppCompatActivity {
                 else if (cardNumber.startsWith("34") || cardNumber.startsWith("37"))
                     cardType = "American Express";
                 else {
-                    Toast.makeText(ActivityConfirmBooking.this,"This is not a Valid Credit Card\nAccepted Visa, Master and AMEX", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ActivityConfirmBooking.this,"This is not a Valid Credit Card \nAccepted Visa, Master and AMEX", Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 if (cardCVC.isEmpty() || cardCVC.length() != 3) {
-                    Toast.makeText(ActivityConfirmBooking.this,"CV from tour Credit Card no informed", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ActivityConfirmBooking.this,"CV from your Credit Card not informed", Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 Log.w("BOOK", cardType);
 
-                // ****************************************************************************
-                // user is set to '1' because we do not have authentication - VER MAIN ACTIVITY
-                // ****************************************************************************
                 int user_id = sharedPref.getInt("USER_ID", -1);
                 String user_name = sharedPref.getString("USER_NAME", "");
                 String hash_password = sharedPref.getString("HASH_PASSWORD", "");
 
-                // *************************************
-                // aqui vem o método de autenticação!!!!
-                // *************************************
                 boolean authentication = true;
 
                     if (authentication)

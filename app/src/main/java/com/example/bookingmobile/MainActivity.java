@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     private NumberPicker numberPickerAdults;
     private NumberPicker numberPickerChildren;
 
-    private SharedPreferences sharedPref;
+   private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
 
     MyRecyclerViewAdapterHotels adapterHotels;
@@ -86,8 +86,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         ArrayList<String> cities = CDestinations.getDestinations(dbHelper.getReadableDatabase());
 
         spinnerDestinyCities = (Spinner) findViewById(R.id.spinnerDestinyCities);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.textDestinyCities, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(MainActivity.this,R.array.textDestinyCities, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDestinyCities.setAdapter(adapter);
 
@@ -183,30 +182,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         // define a SharedPreferences to be used
         sharedPref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         editor = sharedPref.edit();
-
-        // initialize the SharedPreferences with default value;
-
-        // tem que colocar a verificação se existe pois senão vai dar pau => quando volta do final da reserva pode dar pau...
-        // ******************************************************************************************************************
-        editor.putInt("USER_ID", 1);                            // mudar este valor para -1 quando tivermos a autenticação pronta
-        editor.putString("USER_NAME", "rhardson0");             // mudar este valor para "" quando tivermos autenticação pronta
-        editor.putString("HASH_PASSWORD", "73872041");          // mudar este valor para "" quando tivermos autenticação pronta
-        editor.putInt("ROOM_SELECTED", -1);
-        editor.putString("HOTEL_NAME", "");
-        editor.putString("HOTEL_CITY", "");
-        editor.putString("ROOM_TYPE", "");
-        editor.putString("DATE_IN", "");
-        editor.putString("DATE_OUT", "");
-        editor.putInt("TOTAL_DAYS", -1);
-        editor.putFloat("TOTAL_PRICE", 0);
-        editor.putInt("NUM_ROOMS", 1);
-        editor.putInt("NUM_ADULTS", 2);
-        editor.putInt("NUM_CHILDREN", 1);
-        editor.putString("CARD_NAME", "");
-        editor.putString("CARD_TYPE", "");
-        editor.putString("CARD_NUMBER", "");
-        editor.putString("CARD_EXPIRE_DATE", "");
-        editor.putString("CARD_CVC", "");
         editor.commit();
 
         Button btnSearch = findViewById(R.id.btnSearch);
@@ -273,7 +248,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                         RecyclerView recyclerView = findViewById(R.id.recyclerViewHotels);
                         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
-                        // tenho que passar o vetor com os hoteis e também o próprio objeto
                         adapterHotels = new MyRecyclerViewAdapterHotels(MainActivity.this,
                                 hotelInfoDisplay, arrayListHotels);
                         adapterHotels.setClickListener(MainActivity.this);

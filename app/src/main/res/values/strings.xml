@@ -53,6 +53,11 @@
     <string name="txtInfo5_2">User Login</string>
     <string name="txtInfo5_3">User Email</string>
     <string name="txtInfo5_4">My Bookings</string>
+    <string name="txtLoginEmail">Email Address</string>
+    <string name="txtLoginPassword">Password</string>
+    <string name="btnLoginLogin">Login</string>
+    <string name="btnLoginLater">Later</string>
+    <string name="btnLoginRegister">Register</string>
     <string-array name="textDestinyCities">
         <item>Vancouver</item>
         <item>Victoria</item>
