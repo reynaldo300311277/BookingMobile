@@ -47,6 +47,19 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.w("Login", "Login Later");
+                String clShared = "";
+                editor.clear();
+                editor.commit();
+                try{
+                    if (sharedPref.contains("USER_EMAIL")){
+                        clShared = sharedPref.getString("USER_EMAIL","");
+                        Log.w("Login", "Login Later - Unable to clear shared prefs");
+                    }
+                }
+                catch(Exception ex){
+                    ex.getMessage();
+                }
+                Log.w("Login", "Shared prefs clear " + clShared);
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 startActivity(intent);
             }
