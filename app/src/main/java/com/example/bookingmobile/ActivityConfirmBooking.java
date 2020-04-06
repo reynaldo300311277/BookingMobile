@@ -145,6 +145,7 @@ public class ActivityConfirmBooking extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
                 String cardName = edtxtCardName.getText().toString();
                 String cardNumber = edtxtCardNumber.getText().toString();
                 String cardCVC = edtxtCardCVC.getText().toString();
@@ -183,6 +184,18 @@ public class ActivityConfirmBooking extends AppCompatActivity {
 
                 Log.w("BOOK", cardType);
 
+                try{
+                    if (!sharedPref.contains("USER_EMAIL")){
+                        boolean value = false;
+                        Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+                        intent.putExtra("key",value);
+                        startActivityForResult(intent, 1);
+                    }
+                }
+                catch (Exception ex){
+                    ex.getMessage();
+                }
+
                 int user_id = sharedPref.getInt("USER_ID", -1);
                 String user_name = sharedPref.getString("USER_NAME", "");
                 String hash_password = sharedPref.getString("HASH_PASSWORD", "");
@@ -220,15 +233,19 @@ public class ActivityConfirmBooking extends AppCompatActivity {
                             startActivity(intent);
                         }
                         else {
+/*
                             Toast.makeText(ActivityConfirmBooking.this,
                                     "Sorry, a problem happened",
                                     Toast.LENGTH_SHORT).show();
+*/
                         }
                     }
                     else {
+/*
                         Toast.makeText(ActivityConfirmBooking.this,
                                 "Sorry, a critical problem happened",
                                 Toast.LENGTH_SHORT).show();
+*/
                     }
                 }
             });

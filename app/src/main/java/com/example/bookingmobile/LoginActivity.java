@@ -16,11 +16,23 @@ import android.widget.Toast;
 public class LoginActivity extends AppCompatActivity {
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
+    private Class activity =   MainActivity.class;
+    private boolean value =   true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        setContentView(R.layout.activity_login);
+
+
+
+       Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            value = extras.getBoolean("key");
+            if(!value){
+                activity =  ActivityConfirmBooking.class;
+            }
+        }
 
        // References
         final EditText email = findViewById(R.id.txt_Email);
@@ -29,6 +41,9 @@ public class LoginActivity extends AppCompatActivity {
 
         Button btnLogin = findViewById(R.id.btn_Login);
         Button btnLoginLater = findViewById(R.id.btn_Later);
+        if(!value){
+            btnLoginLater.setVisibility(View.INVISIBLE);
+        }
         Button btnRegister = findViewById(R.id.btn_Register);
 
         // Shared Preferences
@@ -60,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
                     ex.getMessage();
                 }
                 Log.w("Login", "Shared prefs clear " + clShared);
-                Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                Intent intent = new Intent(getBaseContext(), activity);
                 startActivity(intent);
             }
         });
@@ -102,10 +117,17 @@ public class LoginActivity extends AppCompatActivity {
                         ex.getMessage();
                     }
 
-                    editor.commit();
+                    editor.apply();
                     Log.w("Login", "Verified user - " + emailContent + currentUser.getPkUser());
-                    Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                    startActivity(intent);
+                    Intent intent = new Intent(getBaseContext(), activity);
+                    intent.putExtra("key",value);
+                    if(activity == MainActivity.class){
+                        startActivity(intent);
+                    }
+                    else {
+                        setResult(1, intent);
+                        finish();
+                    }
                 }
                 else{
                     email.setText("");
@@ -137,9 +159,17 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("USER_EMAIL", emailContent);
                     editor.putInt("USER_ID", pk);
                     editor.putString("HASH_PASSWORD", passwordContent);
-                    editor.commit();
-                    Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                    startActivity(intent);
+                    editor.apply();
+                    Intent intent = new Intent(getBaseContext(), activity);
+                    intent.putExtra("key",value);
+                    if(activity == MainActivity.class){
+                        startActivity(intent);
+                    }
+                    else {
+                        setResult(1, intent);
+                        finish();
+                    }
+
                 }
                 else{
                     Log.w("Login", "User already exists, redirected to login - " + emailContent);
