@@ -7,10 +7,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +22,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Pattern;
 
@@ -42,6 +46,8 @@ public class ActivityConfirmBooking extends AppCompatActivity {
     TextView txtConfirmDateIn;
     TextView txtConfirmDateOut;
     TextView txtConfirmPrice;
+
+    ImageView imageViewCC;
 
     private Button btnConfirmBooking;
 
@@ -97,6 +103,8 @@ public class ActivityConfirmBooking extends AppCompatActivity {
         numberPickerYearCC = findViewById(R.id.numberPickerYearCC);
         edtxtCardCVC = findViewById(R.id.edtxtCardCVC);
 
+        imageViewCC = findViewById(R.id.imageViewCC);
+
         numberPickerMonthCC.setDisplayedValues(monthVals);
         numberPickerMonthCC.setMinValue(0);
         numberPickerMonthCC.setMaxValue(monthVals.length-1);
@@ -134,14 +142,33 @@ public class ActivityConfirmBooking extends AppCompatActivity {
 
         txtConfirmPrice.setText("$ " + String.format("%.2f", finalPrice));
 
-//        btnConfirmBooking.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
+        edtxtCardNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-        btnConfirmBooking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+               String strCCNumber = edtxtCardNumber.getText().toString();
+               String cardType = "";
+               if (edtxtCardNumber.getText().toString().startsWith("4"))
+                   imageViewCC.setImageResource(R.drawable.visa);
+               else if (strCCNumber.startsWith("51") || strCCNumber.startsWith("52") ||
+                       strCCNumber.startsWith("53") || strCCNumber.startsWith("54") ||
+                       strCCNumber.startsWith("55"))
+                   imageViewCC.setImageResource(R.drawable.mastercard);
+               else if (strCCNumber.startsWith("34") || strCCNumber.startsWith("37"))
+                   imageViewCC.setImageResource(R.drawable.amex);
+               else
+                   imageViewCC.setImageResource(R.drawable.ic_action_name);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+            btnConfirmBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -154,12 +181,12 @@ public class ActivityConfirmBooking extends AppCompatActivity {
                 Log.w("BOOK", cardNumber);
 
                 String cardExpireDate = numberPickerYearCC.getValue() + "-" +
-                        String.format("%02d", numberPickerMonthCC.getValue()+1) + "-01";
+                        String.format("%02d", numberPickerMonthCC.getValue() + 1) + "-01";
 
                 Log.w("BOOK", cardExpireDate);
 
-                if (cardName.isEmpty() || ! Pattern.matches("[a-zA-Z\\h]+",cardName) ) {
-                    Toast.makeText(ActivityConfirmBooking.this,"Inform a Valid Name from your Credit Card", Toast.LENGTH_LONG).show();
+                if (cardName.isEmpty() || !Pattern.matches("[a-zA-Z\\h]+", cardName)) {
+                    Toast.makeText(ActivityConfirmBooking.this, "Inform a Valid Name from your Credit Card", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -173,26 +200,54 @@ public class ActivityConfirmBooking extends AppCompatActivity {
                 else if (cardNumber.startsWith("34") || cardNumber.startsWith("37"))
                     cardType = "American Express";
                 else {
-                    Toast.makeText(ActivityConfirmBooking.this,"This is not a Valid Credit Card \nAccepted Visa, Master and AMEX", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ActivityConfirmBooking.this, "This is not a Valid Credit Card \nAccepted Visa, Master and AMEX", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if (cardNumber.length() != 16) {
+                    Toast.makeText(ActivityConfirmBooking.this, "This is not a Valid Credit Card \nAccepted Visa, Master and AMEX", Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 if (cardCVC.isEmpty() || cardCVC.length() != 3) {
-                    Toast.makeText(ActivityConfirmBooking.this,"CV from your Credit Card not informed", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ActivityConfirmBooking.this, "CV from your Credit Card not informed", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                int monthCC = numberPickerMonthCC.getValue() + 1;
+                int yearCC = numberPickerYearCC.getValue();
+
+                Calendar calToday = Calendar.getInstance();
+                calToday.set(Calendar.DAY_OF_MONTH, 1);
+                calToday.set(Calendar.HOUR_OF_DAY, 0);
+                calToday.set(Calendar.MINUTE, 0);
+                calToday.set(Calendar.SECOND, 0);
+                calToday.set(Calendar.MILLISECOND, 0);
+
+                Calendar calCard = Calendar.getInstance();
+                calCard.set(yearCC,monthCC,1);
+                calCard.set(Calendar.HOUR_OF_DAY, 0);
+                calCard.set(Calendar.MINUTE, 0);
+                calCard.set(Calendar.SECOND, 0);
+                calCard.set(Calendar.MILLISECOND, 0);
+
+
+                if ( calToday.compareTo(calCard) == 1 ) {
+                    Toast.makeText(ActivityConfirmBooking.this,"Credit Card is expired",
+                            Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 Log.w("BOOK", cardType);
 
-                try{
-                    if (!sharedPref.contains("USER_EMAIL")){
+                try {
+                    if (!sharedPref.contains("USER_EMAIL")) {
                         boolean value = false;
                         Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-                        intent.putExtra("key",value);
+                        intent.putExtra("key", value);
                         startActivityForResult(intent, 1);
                     }
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     ex.getMessage();
                 }
 
@@ -202,52 +257,48 @@ public class ActivityConfirmBooking extends AppCompatActivity {
 
                 boolean authentication = true;
 
-                    if (authentication)
-                    {
-                        boolean newBooking = CBooking.addBooking(dbHelper.getWritableDatabase(),
-                                room.getPkRoom(), user_id, dateIn, dateOut, numAdults, numChildren,
-                                "1",  pricePerNight, cardName, cardType, cardNumber,
-                                cardExpireDate, cardCVC);
+                if (authentication) {
+                    boolean newBooking = CBooking.addBooking(dbHelper.getWritableDatabase(),
+                            room.getPkRoom(), user_id, dateIn, dateOut, numAdults, numChildren,
+                            "1", pricePerNight, cardName, cardType, cardNumber,
+                            cardExpireDate, cardCVC);
 
-                        if (newBooking)
-                        {
-                            editor.putString("DATE_IN", dateIn);
-                            editor.putString("DATE_OUT", dateOut);
-                            editor.putInt("NUM_ROOMS", numRooms);
-                            editor.putInt("NUM_ADULTS", numAdults);
-                            editor.putInt("NUM_CHILDREN", numChildren);
-                            editor.putString("CARD_NAME", cardName);
-                            editor.putString("CARD_TYPE", cardType);
-                            editor.putString("CARD_NUMBER", cardNumber);
-                            editor.putString("CARD_EXPIRE_DATE", cardExpireDate);
-                            editor.putString("CARD_CVC", cardCVC);
-                            editor.putString("HOTEL_NAME", hotel.getName());
-                            editor.putString("HOTEL_CITY", hotel.getCity());
-                            editor.putString("ROOM_TYPE", room.getType());
-                            editor.putFloat("TOTAL_PRICE", finalPrice);
-                            editor.putInt("TOTAL_DAYS", totalDays);
-                            editor.apply();
+                    if (newBooking) {
+                        editor.putString("DATE_IN", dateIn);
+                        editor.putString("DATE_OUT", dateOut);
+                        editor.putInt("NUM_ROOMS", numRooms);
+                        editor.putInt("NUM_ADULTS", numAdults);
+                        editor.putInt("NUM_CHILDREN", numChildren);
+                        editor.putString("CARD_NAME", cardName);
+                        editor.putString("CARD_TYPE", cardType);
+                        editor.putString("CARD_NUMBER", cardNumber);
+                        editor.putString("CARD_EXPIRE_DATE", cardExpireDate);
+                        editor.putString("CARD_CVC", cardCVC);
+                        editor.putString("HOTEL_NAME", hotel.getName());
+                        editor.putString("HOTEL_CITY", hotel.getCity());
+                        editor.putString("ROOM_TYPE", room.getType());
+                        editor.putFloat("TOTAL_PRICE", finalPrice);
+                        editor.putInt("TOTAL_DAYS", totalDays);
+                        editor.apply();
 
-                            Intent intent = new Intent(ActivityConfirmBooking.this,
-                                    ActivityConfirmationView.class);
-                            startActivity(intent);
-                        }
-                        else {
-/*
-                            Toast.makeText(ActivityConfirmBooking.this,
-                                    "Sorry, a problem happened",
-                                    Toast.LENGTH_SHORT).show();
-*/
-                        }
-                    }
-                    else {
+                        Intent intent = new Intent(ActivityConfirmBooking.this,
+                                ActivityConfirmationView.class);
+                        startActivity(intent);
+                    } else {
 /*
                         Toast.makeText(ActivityConfirmBooking.this,
-                                "Sorry, a critical problem happened",
+                                "Sorry, a problem happened",
                                 Toast.LENGTH_SHORT).show();
 */
                     }
+                } else {
+/*
+                    Toast.makeText(ActivityConfirmBooking.this,
+                            "Sorry, a critical problem happened",
+                            Toast.LENGTH_SHORT).show();
+*/
                 }
-            });
+            }
+        });
     }
 }
